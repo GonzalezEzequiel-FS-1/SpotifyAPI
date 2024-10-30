@@ -7,7 +7,7 @@ const dotEnv = require("dotenv")
 dotEnv.config()
 const PORT = process.env.PORT || 3069;
 const DATABASE_URL = process.env.DATABASE_URL;
-
+console.log(DATABASE_URL)
 // Express native JSON body parser
 app.use(express.json());
 //Load CORS to have less headaches...
