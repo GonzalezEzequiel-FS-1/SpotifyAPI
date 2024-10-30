@@ -23,8 +23,13 @@ TextField.propTypes={
 
 }
 const TextInput = styled.input`
-    height:2rem;
+    height:2.5rem;
+    padding: 0.5rem;
+    width:20rem;
     border-radius:5px;
     border:2px solid  #99999950;
-    background-color:#00000000
+    background-color:#00000000;
+    font-family:"Palanquin", sans;
+    font-weight: 600;
+    letter-spacing:.10rem;
 `
