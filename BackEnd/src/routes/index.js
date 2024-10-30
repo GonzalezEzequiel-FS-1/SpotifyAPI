@@ -1,5 +1,12 @@
 const express = require("express");
 const router = express.Router()
+const {
+    createUser
+} = require('../controllers/userController')
+
+
+// User Routes
+router.post('/user', createUser)
 router.get("/test",(req, res)=>{
     try {
         res.status(200).json({
