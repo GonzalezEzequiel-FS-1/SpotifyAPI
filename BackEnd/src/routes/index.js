@@ -1,12 +1,21 @@
 const express = require("express");
 const router = express.Router()
 const {
-    createUser
+    createUser,
+    deleteUser,
+    modifyUser,
+    getOneUser,
+    getAllUsers
 } = require('../controllers/userController')
 
 
 // User Routes
-router.post('/user', createUser)
+router.post('/user', createUser);
+router.delete("/user/:name", deleteUser);
+router.patch("/user/:user_name", modifyUser);
+router.get("/user/:user_name", getOneUser)
+router.get("/user", getAllUsers)
+
 router.get("/test",(req, res)=>{
     try {
         res.status(200).json({

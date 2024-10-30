@@ -3,7 +3,6 @@ const mongoose = require('mongoose')
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        unique: false,
         required: [true, "Please provide a first name"],
         trim: true,
         lowercase: true,
@@ -12,7 +11,6 @@ const UserSchema = new mongoose.Schema({
     },
     last_name: {
         type: String,
-        unique: false,
         required: [true, "Please provide a last name"],
         trim: true,
         lowercase: true,
@@ -21,16 +19,16 @@ const UserSchema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-        unique: true,
+        unique:true,
         required: [true, "Please provide a User Name"],
         trim: true,
         lowercase: true,
         minlength: 3,
-        maxlength: 20
+        maxlength: 30
     },
     email: {
         type: String,
-        unique: true,
+        unique:true,
         required: [true, "Please provide an Email"],
         trim: true,
         lowercase: true,
