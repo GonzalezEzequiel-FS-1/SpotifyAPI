@@ -8,13 +8,14 @@ const createUser = async (req, res) => {
     // Collect the user data from the request's body
     const { user } = req.body;
     // Ensure that all requested data is provided
-    if (!user.first_name || !user.last_name || !user.user_name || !user.email || !user.password || !user.birthday) {
-
-        // If there is missing data on the request respond with 422 "Unprocessable Content"
-        return res.status(422).json({
-            success: false,
-            message: `Missing user data, please fill all fields `
-        })
+    // if (!user.first_name || !user.last_name || !user.user_name || !user.email || !user.password || !user.birthday) {
+    //     console.log(`Failed here`)
+    //     // If there is missing data on the request respond with 422 "Unprocessable Content"
+    //     return res.status(422).json({
+    //         success: false,
+    //         message: `Missing user data, please fill all fields `
+    //     })
+        
     }
     try {
         // If the previous check passes, attempt to create a new user

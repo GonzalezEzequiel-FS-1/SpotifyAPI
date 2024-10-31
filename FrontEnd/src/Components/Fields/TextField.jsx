@@ -16,10 +16,10 @@ export default function TextField({type, onChange, value, placeholder}) {
 }
 
 TextField.propTypes={
-    type:PropTypes.string.isRequired,
-    onChange:PropTypes.string.isRequired,
-    value:PropTypes.string.isRequired,
-    placeholder:PropTypes.string.isRequired,
+    type:PropTypes.string,
+    onChange:PropTypes.func,
+    value:PropTypes.string,
+    placeholder:PropTypes.string
 
 }
 const TextInput = styled.input`

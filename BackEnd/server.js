@@ -2,6 +2,15 @@
 const express = require('express');
 const app = express();
 
+//Load CORS to have less headaches...
+const cors = require("cors")
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions));
+
 //Load DotEnv and the current variables
 const dotEnv = require("dotenv")
 dotEnv.config()
@@ -10,10 +19,6 @@ const DATABASE_URL = process.env.DATABASE_URL;
 console.log(DATABASE_URL)
 // Express native JSON body parser
 app.use(express.json());
-//Load CORS to have less headaches...
-const cors = require("cors")
-app.use(cors());
-
 
 //Loading Morgan to log HTTP requests
 const morgan = require('morgan')

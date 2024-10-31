@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        required: [true, "Please provide a first name"],
+        default: "",
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     },
     last_name: {
         type: String,
-        required: [true, "Please provide a last name"],
+        default: "",
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -19,8 +19,8 @@ const UserSchema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-        unique:true,
-        required: [true, "Please provide a User Name"],
+        default: "",
+        unique: true,
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique:true,
+        unique: true,
         required: [true, "Please provide an Email"],
         trim: true,
         lowercase: true,
@@ -53,28 +53,32 @@ const UserSchema = new mongoose.Schema({
         }
     },
     birthday: {
-        day: {
+        day: { 
             type: Number,
             min: 1,
-            max: 31
-        },
+            max: 31,
+            default: "" },
         month: {
             type: Number,
             min: 1,
-            max: 12
-        },
+            max: 12,
+            default: "" },
         year: {
             type: Number,
             min: 1920,
-            max: new Date().getFullYear()
-        },
-    }, createdAt: {
+            max: new Date().getFullYear(),
+            default: "" },
+    },
+
+
+    createdAt: {
         type: Date,
         default: Date.now
     },
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Favorites"
+        ref: "Favorites",
+        default: ""
     }],
 
 

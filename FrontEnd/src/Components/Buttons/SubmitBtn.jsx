@@ -1,16 +1,17 @@
 import styled from "styled-components"
 import propTypes from "prop-types"
-export default function SubmitBtn({ text, onClick }) {
+export default function SubmitBtn({ text, onClick, type }) {
     return (
         <>
-            <Button onClick={onClick}>{text}</Button>
+            <Button onClick={onClick} type={type}>{text}</Button>
         </>
     )
 }
 
 SubmitBtn.propTypes = {
     text: propTypes.string.isRequired,
-    onClick: propTypes.string.isRequired
+    onClick: propTypes.func,
+    type: propTypes.string
 }
 const Button = styled.button`
     background-color:#1ed760;

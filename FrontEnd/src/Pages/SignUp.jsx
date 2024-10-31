@@ -2,24 +2,45 @@ import styled from "styled-components";
 import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import TextField from "../Components/Fields/TextField";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+const API_URL=`http://localhost:3069/api/user`
 export default function SignUp() {
     const navigate = useNavigate();
-    const[name, setName]=useState('')
+    const[email, setEmail]=useState('')
     const[password, setPassword]=useState('')
     const[confirm, setConfirm]=useState('')
-    const[error, setError]=useState('')
-    const[loading, setLoading]=useState('')
+    const[error, setError]=useState(null)
+    //const[loading, setLoading]=useState(true)
+
 
 
     const handleSubmit = async (e) => {
-        
+        e.preventDefault()
+        try{
+        const response = await axios.post(`${API_URL}`,{
+            user:{
+                first_name:null,
+                last_name:null,
+                userName:null,
+                email,
+                password,
+                birthday:null,
+                favorites:null    
+            }
+            })
+            console.log(response.data)
+            //setLoading(false)
+            navigate("/home")
+    }catch(error){
+        setError(error.message);
     }
+}
     return (
-        <Container>
+        <Container onSubmit={handleSubmit}>
             <TopContainer>
+                <ErrorField>{error}</ErrorField>
                 <Title>Sign up</Title>
                 <SubTitle>Create an account or<TextLink to={"/signin"}>Sign in</TextLink></SubTitle>
             </TopContainer>
@@ -28,8 +49,8 @@ export default function SignUp() {
                 <TextField
                     placeholder=""
                     type="email"
-                    value={name}
-                    onChange={(e)=>setName(e.target.value)}
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
                 />
             </FieldContainer>
             <FieldContainer>
@@ -53,7 +74,7 @@ export default function SignUp() {
 
 
 
-            <SubmitBtn onClick={handleSubmit} text={"SUBMIT"} />
+            <SubmitBtn type="submit" text={"SUBMIT"} />
             <BottomText>By signing up to create an account, you are accepting our terms of service and privacy policy </BottomText>
         </Container>
     )
@@ -115,4 +136,12 @@ font-family: Sintony;
     margin-top:1rem;
     color:#999999;
     font-weight: 600;
+`
+const ErrorField = styled.p`
+    color:red;
+    font-size:.75rem;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    letter-spacing: .25rem;
+    text-transform: uppercase;
+    text-align: center;
 `
