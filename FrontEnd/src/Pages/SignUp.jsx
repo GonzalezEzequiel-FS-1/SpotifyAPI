@@ -5,38 +5,40 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const API_URL=`http://localhost:3069/api/user`
+const API_URL = `http://localhost:3069/api/user`
 export default function SignUp() {
     const navigate = useNavigate();
-    const[email, setEmail]=useState('')
-    const[password, setPassword]=useState('')
-    const[confirm, setConfirm]=useState('')
-    const[error, setError]=useState(null)
+    const [user, setUser] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirm, setConfirm] = useState('')
+    const [error, setError] = useState(null)
     //const[loading, setLoading]=useState(true)
-
-
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        try{
-        const response = await axios.post(`${API_URL}`,{
-            user:{
-                first_name:null,
-                last_name:null,
-                userName:null,
-                email,
-                password,
-                birthday:null,
-                favorites:null    
-            }
+        if(password !== confirm){
+            setError("Passwords does not match")
+            return
+        }
+        try {
+            
+            const response = await axios.post(`${API_URL}`, {
+                "user": {
+
+                     "user_name": user,
+                    "email": email,
+                    "password": password,
+                }
             })
             console.log(response.data)
             //setLoading(false)
             navigate("/home")
-    }catch(error){
-        setError(error.message);
+        } catch (error) {
+            setError(error.response?.data?.message || error.message);
+        }
     }
-}
     return (
         <Container onSubmit={handleSubmit}>
             <TopContainer>
@@ -45,12 +47,21 @@ export default function SignUp() {
                 <SubTitle>Create an account or<TextLink to={"/signin"}>Sign in</TextLink></SubTitle>
             </TopContainer>
             <FieldContainer>
+                <Label>User Name</Label>
+                <TextField
+                    placeholder=""
+                    type="text"
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                />
+                </FieldContainer>
+            <FieldContainer>
                 <Label>Email</Label>
                 <TextField
                     placeholder=""
                     type="email"
                     value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
             </FieldContainer>
             <FieldContainer>
@@ -59,7 +70,7 @@ export default function SignUp() {
                     placeholder=""
                     type="password"
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
             </FieldContainer>
             <FieldContainer>
@@ -68,7 +79,7 @@ export default function SignUp() {
                     placeholder=""
                     type="password"
                     value={confirm}
-                    onChange={(e)=>setConfirm(e.target.value)}
+                    onChange={(e) => setConfirm(e.target.value)}
                 />
             </FieldContainer>
 

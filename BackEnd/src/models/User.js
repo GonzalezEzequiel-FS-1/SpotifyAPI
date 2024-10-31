@@ -3,28 +3,28 @@ const mongoose = require('mongoose')
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        default: "",
+        default: null, // Set default to null
         trim: true,
         lowercase: true,
         minlength: 3,
-        maxlength: 20
+        maxlength: 20,
     },
     last_name: {
         type: String,
-        default: "",
+        default: null, // Set default to null
         trim: true,
         lowercase: true,
         minlength: 3,
-        maxlength: 20
+        maxlength: 20,
     },
     user_name: {
         type: String,
-        default: "",
+        default: null, // Set default to null
         unique: true,
         trim: true,
         lowercase: true,
         minlength: 3,
-        maxlength: 30
+        maxlength: 30,
     },
     email: {
         type: String,
@@ -38,7 +38,6 @@ const UserSchema = new mongoose.Schema({
             },
             message: 'Invalid email address format',
         },
-
     },
     password: {
         type: String,
@@ -47,42 +46,42 @@ const UserSchema = new mongoose.Schema({
         maxlength: 16,
         validate: {
             validator: function (value) {
-                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,16}$/.test(value)
+                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,16}$/.test(value);
             },
-            message: "Password should contain 8 to 16 characters, at least one uppercase letter, one lowercase letter, one number and one special character"
-        }
+            message: "Password should contain 6 to 16 characters, at least one uppercase letter, one lowercase letter, one number and one special character",
+        },
     },
     birthday: {
         day: { 
             type: Number,
             min: 1,
             max: 31,
-            default: "" },
+            default: null, // Allow null
+        },
         month: {
             type: Number,
             min: 1,
             max: 12,
-            default: "" },
+            default: null, // Allow null
+        },
         year: {
             type: Number,
             min: 1920,
             max: new Date().getFullYear(),
-            default: "" },
+            default: null, // Allow null
+        },
     },
-
-
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Favorites",
-        default: ""
+        default: null, // Allow null
     }],
+});
 
-
-})
 
 module.exports = mongoose.model('User', UserSchema)
 
