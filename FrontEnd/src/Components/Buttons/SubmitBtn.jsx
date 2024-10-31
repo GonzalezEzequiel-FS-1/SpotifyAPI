@@ -23,8 +23,12 @@ const Button = styled.button`
     font-weight: 700;
     letter-spacing: .15rem;
     transition: .15s all ease-in-out;
+    cursor:pointer;
     &:active{
         transform: scale(.99);
         font-weight: 100;
+    }
+    &:hover{
+        background-color:#167128;  
     }
 `

@@ -7,6 +7,13 @@ const {
     getOneUser,
     getAllUsers
 } = require('../controllers/userController')
+const {
+    callback,
+    redirectToSpotifyAuth
+} = require("../controllers/spotifyControllers");
+const { redirectToAuthCodeFlow, callback2} = require("../controllers/controllersPerSpoti");
+
+
 
 
 // User Routes
@@ -29,5 +36,18 @@ router.get("/test",(req, res)=>{
         })
     }
 })
+
+
+// Spotify's API Routes:
+
+// Route to initiate the login process
+router.get('/login', redirectToSpotifyAuth);
+
+// Callback route that Spotify will redirect to
+router.get('/callback', callback2);
+
+//Testing
+router.get('/auth/spotify', redirectToAuthCodeFlow )
+
 
 module.exports = router;

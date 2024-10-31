@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const API_URL = `http://localhost:3069/api/user`
+const API_URL = `http://localhost:3069/api/user`;
+import LogoImg from '../assets/SpotNetLogo.png';
+//const spotify_OAUTH_URI = "http://localhost:3069/api/login"
 export default function SignUp() {
     const navigate = useNavigate();
     const [user, setUser] = useState('')
@@ -14,27 +16,27 @@ export default function SignUp() {
     const [confirm, setConfirm] = useState('')
     const [error, setError] = useState(null)
     //const[loading, setLoading]=useState(true)
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(password !== confirm){
+        if (password !== confirm) {
             setError("Passwords does not match")
             return
         }
         try {
-            
+
             const response = await axios.post(`${API_URL}`, {
                 "user": {
 
-                     "user_name": user,
+                    "user_name": user,
                     "email": email,
                     "password": password,
                 }
             })
             console.log(response.data)
             //setLoading(false)
-            navigate("/home")
+            navigate('/spotify-login')
         } catch (error) {
             setError(error.response?.data?.message || error.message);
         }
@@ -42,10 +44,17 @@ export default function SignUp() {
     return (
         <Container onSubmit={handleSubmit}>
             <TopContainer>
-                <ErrorField>{error}</ErrorField>
+                {error ? (
+                    <ErrorField>{error}</ErrorField>
+                ) : (
+                    <Logo src={LogoImg} alt="SpotNet Logo" />
+                )}
+            </TopContainer>
+            <TitleContainer>
                 <Title>Sign up</Title>
                 <SubTitle>Create an account or<TextLink to={"/signin"}>Sign in</TextLink></SubTitle>
-            </TopContainer>
+            </TitleContainer>
+
             <FieldContainer>
                 <Label>User Name</Label>
                 <TextField
@@ -54,7 +63,7 @@ export default function SignUp() {
                     value={user}
                     onChange={(e) => setUser(e.target.value)}
                 />
-                </FieldContainer>
+            </FieldContainer>
             <FieldContainer>
                 <Label>Email</Label>
                 <TextField
@@ -90,6 +99,18 @@ export default function SignUp() {
         </Container>
     )
 }
+
+const Logo = styled.img`
+    width: 20%;
+    max-width: 20%; 
+    height: auto; 
+`;
+const TitleContainer = styled.div`
+display: flex;
+align-items: flex-start;
+flex-direction: column;
+width:100%;
+`
 
 const Container = styled.form`
     display:flex;
@@ -132,6 +153,9 @@ const SubTitle = styled.p`
 const TopContainer = styled.div`
     width:100%;
     font-size: 1.5rem;
+    display:flex;
+    align-items: center;
+    flex-direction:column;
 `
 const TextLink = styled(Link)`
     text-decoration: none;
@@ -140,7 +164,7 @@ const TextLink = styled(Link)`
     cursor: pointer;
 `
 const BottomText = styled.p`
-font-family: Sintony;
+    font-family: Sintony;
     font-size: .8rem;
     line-height: 90%;
     text-align: center;
