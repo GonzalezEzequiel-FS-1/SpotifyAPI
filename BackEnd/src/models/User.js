@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        default: null, // Set default to null
+        default: null, 
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     },
     last_name: {
         type: String,
-        default: null, // Set default to null
+        default: null, 
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -19,7 +19,7 @@ const UserSchema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-        default: null, // Set default to null
+        default: null, 
         unique: true,
         trim: true,
         lowercase: true,
@@ -56,29 +56,34 @@ const UserSchema = new mongoose.Schema({
             type: Number,
             min: 1,
             max: 31,
-            default: null, // Allow null
+            default: null, 
         },
         month: {
             type: Number,
             min: 1,
             max: 12,
-            default: null, // Allow null
+            default: null, 
         },
         year: {
             type: Number,
             min: 1920,
             max: new Date().getFullYear(),
-            default: null, // Allow null
+            default: null,
         },
     },
     createdAt: {
         type: Date,
         default: Date.now,
     },
+    token:{
+        type:String,
+        default:null,
+        unique:true
+    },
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Favorites",
-        default: null, // Allow null
+        default: null,
     }],
 });
 

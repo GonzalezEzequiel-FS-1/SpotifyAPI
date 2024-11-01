@@ -7,7 +7,7 @@ const redirectToAuthCodeFlow = (req, res) => {
     const redirectUri = encodeURIComponent(redirectURI);
     const scope = encodeURIComponent("user-read-private user-read-email");
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}`;
-    res.redirect(authUrl); // Redirect the user to the authorization URL
+    res.redirect(authUrl); 
 };
 
 const callback2 = async (req, res) => {
@@ -15,8 +15,8 @@ const callback2 = async (req, res) => {
     try {
         const accessToken = await getAccessToken(clientId, code);
         const profile = await fetchProfile(accessToken);
-        populateUI(profile); // Handle UI population if necessary
-        res.redirect('/'); // Redirect to home or another page
+        populateUI(profile); 
+        res.redirect('/'); 
     } catch (error) {
         console.error("Error in callback:", error);
         res.status(500).send("Authentication failed");
@@ -59,10 +59,10 @@ const fetchProfile = async (token) => {
     return profile; 
 };
 
-// Assuming populateUI is needed in a different context, you can keep it here or remove it if not needed
+
 const populateUI = (profile) => {
-    // If you're using a templating engine, you might render a view here
-    console.log("Profile Data:", profile); // Or handle UI updates as needed
+   
+    console.log("Profile Data:", profile);
 };
 
 module.exports = {

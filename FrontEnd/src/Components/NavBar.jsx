@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 export default function NavBar (){
     return(
         <Container>
-            <TopContainers><LinkText to={"/home"}>TESTING</LinkText></TopContainers>
-            <TopContainers><LinkText to={"/home"}>TESTING</LinkText></TopContainers>
-            <TopContainers><LinkText to={"/home"}>TESTING</LinkText></TopContainers>
+            <TopContainers><LinkText to={"/home"}>LOGO</LinkText></TopContainers>
+            <TopContainers><LinkText to={"/home"}>Search Bar</LinkText></TopContainers>
+            <TopContainers><LinkText to={"/home"}>Nav and Profile</LinkText></TopContainers>
 
         </Container>
     )

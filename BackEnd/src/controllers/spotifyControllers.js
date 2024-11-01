@@ -50,6 +50,7 @@ const callback = async (req, res) => {
 
         // Store the access token
         const token = response.data.access_token;
+
         console.log('Access Token:', token);
 
         // Send a success response with the token 
@@ -59,6 +60,10 @@ const callback = async (req, res) => {
         //     message: 'Token obtained successfully!'
         // });
 
+
+        //TODO STORE TOKEN ON SERVER:
+        
+        
         //redirect the user to the home page
 
         res.status(302).redirect(`${frontendURL}?access_token=${token}`);

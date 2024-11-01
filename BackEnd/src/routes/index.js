@@ -44,7 +44,7 @@ router.get("/test",(req, res)=>{
 router.get('/login', redirectToSpotifyAuth);
 
 // Callback route that Spotify will redirect to
-router.get('/callback', callback2);
+router.get('/callback', callback);
 
 //Testing
 router.get('/auth/spotify', redirectToAuthCodeFlow )
