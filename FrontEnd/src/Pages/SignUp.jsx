@@ -36,7 +36,7 @@ export default function SignUp() {
             })
             console.log(response.data)
             //setLoading(false)
-            navigate('/spotify-login')
+            navigate(`/spotify-login?user=${user}`)
         } catch (error) {
             setError(error.response?.data?.message || error.message);
         }

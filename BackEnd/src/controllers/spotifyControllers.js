@@ -66,7 +66,7 @@ const callback = async (req, res) => {
         
         //redirect the user to the home page
 
-        res.status(302).redirect(`${frontendURL}?access_token=${token}`);
+        res.status(302).redirect(`${frontendURL}`);
 
     } catch (error) {
         // Log and return an error response
