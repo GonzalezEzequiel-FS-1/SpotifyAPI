@@ -1,10 +1,15 @@
 const axios = require("axios");
 const querystring = require("node:querystring");
+const AUTH_URL = process.env.AUTH_URL;
+const CLIENT_ID = process.env.CLIENT_ID;
+
+
 
 // Function to redirect users to Spotify's authorization page
 const redirectToSpotifyAuth = (req, res) => {
+    let dialog = true;
     const redirect_uri = encodeURIComponent(process.env.REDIRECT_URI);
-    const authURL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${redirect_uri}&scope=user-read-private`;
+    const authURL = `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirect_uri}&scope=user-read-private&show_dialog=${dialog}`;
     res.redirect(authURL);
 };
 
@@ -30,15 +35,16 @@ const callback = async (req, res) => {
             message: 'No authorization code found in request.'
         });
     }
-
+/// STEP ONE REQUEST AUTHORIZATION
     // Set up the parameters for the token request
     const params = new URLSearchParams();
+    //SENDING CLIENT ID, CODE ETC TO HAVE THE USER SIGN IN
     params.append('grant_type', 'authorization_code');
     params.append("code", code);
     params.append("redirect_uri", redirect_uri);
     params.append("client_id", client_id);
     params.append("client_secret", client_secret);
-
+    
 
     // Attempt to obtain the access token
     try {
@@ -80,10 +86,23 @@ const callback = async (req, res) => {
 
 
 
+const logout = (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send("Could not log out");
+        }
+
+        // Clear the cookie with the custom name
+        res.clearCookie('Spotnetcookie', { path: '/' }); // Ensure you specify the path
+        res.send("Logged out");
+    });
+};
+
 
 
 // Export the functions for use in your routes
 module.exports = {
     redirectToSpotifyAuth,
     callback,
+    logout
 };

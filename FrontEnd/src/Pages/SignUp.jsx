@@ -33,7 +33,7 @@ export default function SignUp() {
                     "email": email,
                     "password": password,
                 }
-            })
+            },{ withCredentials: true })
             console.log(response.data)
             //setLoading(false)
             navigate(`/spotify-login?user=${user}`)

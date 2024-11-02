@@ -3,59 +3,53 @@ const mongoose = require('mongoose')
 
 // Create a User
 const createUser = async (req, res) => {
-    //Log the body for troubleshooting
-    console.log(req.body);
-    // Collect the user data from the request's body
     const { user } = req.body;
-    
-    // Ensure that all requested data is provided
-    // if (!user.first_name || !user.last_name || !user.user_name || !user.email || !user.password || !user.birthday) {
-    //     console.log(`Failed here`)
-    //     // If there is missing data on the request respond with 422 "Unprocessable Content"
-    //     return res.status(422).json({
-    //         success: false,
-    //         message: `Missing user data, please fill all fields `
-    //     })
-        
-    // }
+    req.session.user = null;
     try {
-        // If the previous check passes, attempt to create a new user
-        const newUser = new User(user)
+        const newUser = new User(user);
+        const userData = await newUser.save();
 
-        // Await Saving the user data to the server
-        const userData = await newUser.save()
+        // Set session user after user is saved
+        req.session.user = {
+            user_name: userData.user_name,
+            email: userData.email
+        };
 
-        // If the the data is correct respond with 201 "Created".
-        return res.status(201).json({
-            success: true,
-            message: `User Created`,
-            data: userData
-        })
+        // Save session and send response after it completes
+        req.session.save((err) => {
+            if (err) {
+                console.error("Error saving session:", err);
+                return res.status(500).json({ success: false, message: "Session save error" });
+            }
+            return res.status(201).json({
+                success: true,
+                message: `User Created`,
+                data: req.session.user.user_name,
+            });
+        });
+
     } catch (error) {
-
-        // Catch specific Mongo validation errors
+        // Catch and handle specific Mongo errors
         if (error.name === 'ValidationError') {
             return res.status(400).json({
                 success: false,
                 message: 'Validation Error: ' + error.message
             });
-        }
-
-        // Check for "Duplicate Keys"
-        if (error.code === 11000) {
+        } else if (error.code === 11000) {
             return res.status(409).json({
                 success: false,
                 message: 'User with this email or username already exists.'
             });
         }
 
-        // If an unknown error occurs respond with status 500 "Internal Server error"
+        // For other errors, return a generic 500 response
         return res.status(500).json({
             success: false,
             message: `${req.method} failed, consult >>> ${error.message}`
-        })
+        });
     }
-}
+};
+
 const deleteUser = async (req, res) => {
     const { name } = req.params;
     if (!name) {
@@ -148,7 +142,7 @@ const getOneUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: `User ${name} not found`,
+                message: `User ${user_name} not found`,
             });
         }
 
@@ -160,34 +154,98 @@ const getOneUser = async (req, res) => {
     } catch (error) {
         // Handle errors during the database query
         return res.status(500).json({
-            success: false, // Indicates that an error occurred
+            success: false, 
             message: error.message
         });
     }
 };
 
-const getAllUsers = async (req, res)=>{
-    try{
-    const users = await User.find()
-    if(!users || users.length === 0){
-        return res.status(402).json({
-            success:false,
-            message:`No users in database`
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find()
+        if (!users || users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `No users in database`
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            data: users
         })
-    }
-    return res.status(200).json({
-        success:true,
-        data:users
-    })
 
-    }catch(error){
+    } catch (error) {
         return res.status(500).json({
-            success:false,
-            message:error.message
+            success: false,
+            message: error.message
         })
     }
 }
 
+const signIn = async (req, res) => {
+    const { user } = req.body
+
+    const user_name = user.user_name;
+    const password = user.password;
+    if (!user) {
+        return res.status(400).json({
+            success: false,
+            message: `Please provide a user name`
+        })
+    }
+    try {
+
+        if (!user_name || !password) {
+            return res.status(401).json({
+                success: false,
+                message: ` User Data not found`
+            })
+        }
+        const loggingUser = await User.findOne({
+            user_name: user_name,
+        })
+        if (!loggingUser) {
+            return res.status(404).json({
+                success: false,
+                message: `User ${user_name} not found.`
+            })
+        }
+        const isMatch = await loggingUser.comparePassword(password)
+        if (!isMatch) {
+            
+            return res.status(401).json({
+                success: false,
+                message: `Passwords did not match`
+            })
+           
+        }
+
+        req.session.user = {
+            user_name: loggingUser.user_name
+        }
+
+        req.session.save((error) => {
+            if (error) {
+                console.error(error.message)
+                return res.status(500).json({
+                    success: false,
+                    message: error.message
+                })
+            }
+        })
+
+        return res.status(200).json({
+            success:true,
+            message:`User ${user_name} authenticated successfully`
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+
+}
 
 
 module.exports = {
@@ -197,6 +255,19 @@ module.exports = {
     //createMultipleUsers,
     deleteUser,
     //deleteAllUsers,
-    modifyUser
-
+    modifyUser,
+    signIn
 }
+
+
+
+
+
+
+
+/*
+
+{"_id":"2SRFXIQc82JMhTUxnTjL1eVc8qyPQPu3","expires":{"$date":{"$numberLong":"1730571153557"}},"session":"{\"cookie\":{\"originalMaxAge\":86400000,\"expires\":\"2024-11-02T18:12:33.557Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"user\":{\"user_name\":\"qoqoqoq\",\"email\":\"qoqoqoqo@gmail.com\"}}"}
+
+
+*/

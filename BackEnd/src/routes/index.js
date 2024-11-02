@@ -5,14 +5,24 @@ const {
     deleteUser,
     modifyUser,
     getOneUser,
-    getAllUsers
+    getAllUsers,
+    signIn
 } = require('../controllers/userController')
 const {
     callback,
-    redirectToSpotifyAuth
+    redirectToSpotifyAuth,
+    logout
 } = require("../controllers/spotifyControllers");
-const { redirectToAuthCodeFlow, callback2} = require("../controllers/controllersPerSpoti");
 
+//const { redirectToAuthCodeFlow, callback2} = require("../controllers/controllersPerSpoti");
+const { sessionChecker } = require("../middlewares/checkSession");
+
+
+router.get("/session-data",(req,res)=>{
+    
+    console.log(req.session)
+    res.json(req.session)
+})
 
 
 
@@ -20,8 +30,9 @@ const { redirectToAuthCodeFlow, callback2} = require("../controllers/controllers
 router.post('/user', createUser);
 router.delete("/user/:name", deleteUser);
 router.patch("/user/:user_name", modifyUser);
-router.get("/user/:user_name", getOneUser)
+router.get("/user/:user_name",  getOneUser)
 router.get("/user", getAllUsers)
+router.get("/check", sessionChecker)
 
 router.get("/test",(req, res)=>{
     try {
@@ -41,13 +52,18 @@ router.get("/test",(req, res)=>{
 // Spotify's API Routes:
 
 // Route to initiate the login process
-router.get('/login', redirectToSpotifyAuth);
+router.get('/login' , redirectToSpotifyAuth);
 
 // Callback route that Spotify will redirect to
-router.get('/callback', callback);
+router.get('/callback' , callback);
 
 //Testing
-router.get('/auth/spotify', redirectToAuthCodeFlow )
+//router.get('/auth/spotify', redirectToAuthCodeFlow )
+router.get("/home", (req, res)=>{
+    res.send("Session Created")
+})
 
+router.get('/logout', logout)
+router.post("/signin", signIn)
 
 module.exports = router;
