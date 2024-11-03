@@ -2,7 +2,8 @@ import PropTypes from "prop-types"
 import styled from "styled-components"
 
 
-export default function TextField({type, onChange, value, placeholder}) {
+
+export default function SearchBar({type, onChange, value, placeholder}) {
   return (
     <>
       <TextInput
@@ -11,11 +12,12 @@ export default function TextField({type, onChange, value, placeholder}) {
             onChange={onChange}
             placeholder={placeholder}
         />
+        
     </>
   )
 }
 
-TextField.propTypes={
+SearchBar.propTypes={
     type:PropTypes.string,
     onChange:PropTypes.func,
     value:PropTypes.string,
@@ -28,9 +30,11 @@ const TextInput = styled.input`
     width:20rem;
     border-radius:5px;
     border:2px solid  #99999950;
-    background-color:#00000000;
+    background-color:#186f2c50;
+    color:#fff;
+    text-transform: uppercase;
     font-family:"Palanquin", sans;
     font-weight: 600;
     letter-spacing:.10rem;
-    text-align: left;
+    text-align: center;
 `

@@ -1,5 +1,23 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+
+// Define the Token Schema
+const TokenSchema = new mongoose.Schema({
+    accessToken: {
+        type: String,
+        required: true,
+    },
+    refreshToken: {
+        type: String,
+        required: true,
+    },
+    expiresAt: {
+        type: Date,
+        required: true,
+    },
+}, { _id: false }); 
+
+
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
@@ -75,11 +93,7 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    token:{
-        type:String,
-        default:null,
-        unique:true
-    },
+    spotifyData: TokenSchema, 
     favorites: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Favorites",
@@ -87,38 +101,17 @@ const UserSchema = new mongoose.Schema({
     }],
 });
 
+// Hashing and comparing password logic
 UserSchema.pre('save', async function(next){
     if(this.isModified('password')){
-        this.password = await bcrypt.hash(this.password, 10)
+        this.password = await bcrypt.hash(this.password, 10);
     }
-    next()
+    next();
 });
+
 UserSchema.methods.comparePassword = function(password){
-    return bcrypt.compare(password, this.password)
-}
+    return bcrypt.compare(password, this.password);
+};
 
-
-
-module.exports = mongoose.model('User', UserSchema)
-
-/*
-Example body for Schema
-
-{
-  "user": {
-    "first_name": "Ezequiel",
-    "last_name": "Gonzalez",
-    "user_name": "n00bst3r",
-    "email": "djzekz@gmail.com",
-    "password": "StrongPass!123",
-    "birthday": {
-      "day": 23,
-      "month": 4,
-      "year": 1986
-    },
-    "favorites": []
-  }
-}
-
-
-*/
+// Export the User model
+module.exports = mongoose.model('User', UserSchema);
