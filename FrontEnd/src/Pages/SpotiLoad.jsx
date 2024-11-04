@@ -2,7 +2,7 @@ import styled from "styled-components";
 import SubmitBtn from "../Components/Buttons/SubmitBtn";
 const SpotiLoad = () => {
     const handleSpotifyConnect = () => {
-        window.location.href = 'http://localhost:3069/api/auth'; 
+        window.location.href = 'http://localhost:3069/api/login'; 
     };
 
     return (

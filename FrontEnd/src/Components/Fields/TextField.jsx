@@ -32,5 +32,4 @@ const TextInput = styled.input`
     font-family:"Palanquin", sans;
     font-weight: 600;
     letter-spacing:.10rem;
-    text-align: left;
 `

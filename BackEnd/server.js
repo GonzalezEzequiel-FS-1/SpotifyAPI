@@ -1,62 +1,66 @@
-// Loading Express and its instance
+//Loading Express and its instance
 const express = require('express');
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const session = require("express-session")
+const MongoStore = require("connect-mongo")
 const app = express();
 
-// Load CORS to have less headaches...
-const cors = require("cors");
+//Load CORS to have less headaches...
+const cors = require("cors")
 const corsOptions = {
     origin: 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    credentials:true
 };
 app.use(cors(corsOptions));
 
-// Load DotEnv and the current variables
-const dotEnv = require("dotenv");
-dotEnv.config();
+//Load DotEnv and the current variables
+const dotEnv = require("dotenv")
+dotEnv.config()
 
-// Set Up Sessions
+//Set Up Sessions
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    secret:process.env.SESSION_SECRET,
+    resave:false,
+    saveUninitialized:false,
     store: MongoStore.create({
         mongoUrl: process.env.DATABASE_URL,
-        collectionName: "SpotNetSessions"
-    }),
-    cookie: {
+        collectionName:"SpotNetSessions"
+    }), 
+    
+    cookie:{
         secure: false,
-        httpOnly: true,
+        httpOnly:true,
         maxAge: 1000 * 60 * 60 * 24,
-        name: 'Spotnetcookie'
+        name:'Spotnetcookie'
     }
-}));
+    
+}))
+app.use((req, res, next) => {
+    console.log("Session Data:", req.session);
+    next();
+});
 
 const PORT = process.env.PORT || 3069;
 const DATABASE_URL = process.env.DATABASE_URL;
-
+//console.log(DATABASE_URL)
 // Express native JSON body parser
 app.use(express.json());
 
-// Loading Morgan to log HTTP requests
-const morgan = require('morgan');
+//Loading Morgan to log HTTP requests
+const morgan = require('morgan')
 app.use(morgan('dev'));
 
-const routes = require('./src/routes');
+
+//Defining base route
+const routes= require("./src/routes")
 app.use('/api', routes);
 
-
-// Testing new Auth methods
-const newRoutes = require('./src/controllers/spotify-routes');
-app.use('/api', newRoutes);
-
-// Loading Mongoose Yay! I'm a MERN Dev...
+//Loading Mongoose Yay! I'm a MERN Dev...
 const mongoose = require('mongoose');
 
-// Connect to MongoDB
+
+//Connect to MongoDB
 mongoose.connect(DATABASE_URL);
 
 const db = mongoose.connection;
@@ -68,17 +72,10 @@ db.once('open', () => {
 });
 
 
+//Finally have the server listen on the defined port. Nice!
+app.listen(PORT, ()=>{
+    console.log( `Server running on port ${PORT}`)
+})
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Error occurred:', err);
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal Server Error',
-    });
-});
 
-// Finally have the server listen on the defined port. Nice!
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+

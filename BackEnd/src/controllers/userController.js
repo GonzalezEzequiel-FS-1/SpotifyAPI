@@ -3,66 +3,52 @@ const mongoose = require('mongoose')
 
 // Create a User
 const createUser = async (req, res) => {
-    console.log(req.body);
     const { user } = req.body;
-    
-    // if (!user?.first_name || !user?.last_name || !user?.user_name || !user?.email || !user?.password || !user?.birthday) {
-    //     return res.status(422).json({
-    //         success: false,
-    //         message: `Missing user data, please fill all fields `
-    //     });
-    // }
-    
+    req.session.user = null;
     try {
         const newUser = new User(user);
         const userData = await newUser.save();
-        return res.status(201).json({
-            success: true,
-            message: `User Created`,
-            data: userData
+
+        // Set session user after user is saved
+        req.session.user = {
+            user_name: userData.user_name,
+            email: userData.email
+        };
+
+        // Save session and send response after it completes
+        req.session.save((err) => {
+            if (err) {
+                console.error("Error saving session:", err);
+                return res.status(500).json({ success: false, message: "Session save error" });
+            }
+            return res.status(201).json({
+                success: true,
+                message: `User Created`,
+                data: req.session.user.user_name,
+            });
         });
+
     } catch (error) {
+        // Catch and handle specific Mongo errors
         if (error.name === 'ValidationError') {
             return res.status(400).json({
                 success: false,
                 message: 'Validation Error: ' + error.message
             });
-        }
-        if (error.code === 11000) {
+        } else if (error.code === 11000) {
             return res.status(409).json({
                 success: false,
                 message: 'User with this email or username already exists.'
             });
         }
+
+        // For other errors, return a generic 500 response
         return res.status(500).json({
             success: false,
             message: `${req.method} failed, consult >>> ${error.message}`
         });
     }
-}
-
-const getAllUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        if (!users || users.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: `No users in database`
-            });
-        }
-        return res.status(200).json({
-            success: true,
-            data: users
-        });
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-}
-
-// No other changes needed in other functions
+};
 
 const deleteUser = async (req, res) => {
     const { name } = req.params;
@@ -146,7 +132,8 @@ const modifyUser = async (req, res) => {
     }
 };
 const getOneUser = async (req, res) => {
-    const { user_name } = req.params;
+    const { user_name } = req.params; // Get the user name from the request parameters
+
     try {
         // Attempt to find the user by user_name
         const user = await User.findOne({ user_name: user_name });
@@ -155,62 +142,110 @@ const getOneUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: `User ${user_name} not found`, 
+                message: `User ${user_name} not found`,
             });
         }
-        const spotifyData = user.data.spotifyData
+
         // Return success response with the user data
         return res.status(200).json({
             success: true,
             data: user
-            
         });
     } catch (error) {
+        // Handle errors during the database query
         return res.status(500).json({
             success: false, 
             message: error.message
         });
     }
 };
-const deleteAll = async (req, res) => {
+
+const getAllUsers = async (req, res) => {
     try {
-        const result = await User.deleteMany({});
+        const users = await User.find()
+        if (!users || users.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: `No users in database`
+            })
+        }
         return res.status(200).json({
             success: true,
-            message: `${result.deletedCount} users deleted successfully`
-        });
+            data: users
+        })
+
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: "Failed to delete users",
-            error: error.message
-        });
+            message: error.message
+        })
     }
-};
+}
 
 const signIn = async (req, res) => {
-    try {
-        const { user_name, password } = req.body.user;
-        const user = await User.findOne({ user_name });
+    const { user } = req.body
 
-        // Check if user exists
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Compare the provided password with the stored password
-        const isMatch = await user.comparePassword(password);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid password' });
-        }
-
-        // If the password is correct, create a session or JWT and respond
-        req.session.user = user; // or generate a JWT token
-        return res.status(200).json({ message: 'Sign in successful!', user });
-    } catch (error) {
-        return res.status(500).json({ message: 'Internal server error', error });
+    const user_name = user.user_name;
+    const password = user.password;
+    if (!user) {
+        return res.status(400).json({
+            success: false,
+            message: `Please provide a user name`
+        })
     }
-};
+    try {
+
+        if (!user_name || !password) {
+            return res.status(401).json({
+                success: false,
+                message: ` User Data not found`
+            })
+        }
+        const loggingUser = await User.findOne({
+            user_name: user_name,
+        })
+        if (!loggingUser) {
+            return res.status(404).json({
+                success: false,
+                message: `User ${user_name} not found.`
+            })
+        }
+        const isMatch = await loggingUser.comparePassword(password)
+        if (!isMatch) {
+            
+            return res.status(401).json({
+                success: false,
+                message: `Passwords did not match`
+            })
+           
+        }
+
+        req.session.user = {
+            user_name: loggingUser.user_name
+        }
+
+        req.session.save((error) => {
+            if (error) {
+                console.error(error.message)
+                return res.status(500).json({
+                    success: false,
+                    message: error.message
+                })
+            }
+        })
+
+        return res.status(200).json({
+            success:true,
+            message:`User ${user_name} authenticated successfully`
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+
+}
 
 
 module.exports = {
@@ -219,8 +254,20 @@ module.exports = {
     createUser,
     //createMultipleUsers,
     deleteUser,
-    deleteAll,
+    //deleteAllUsers,
     modifyUser,
     signIn
-
 }
+
+
+
+
+
+
+
+/*
+
+{"_id":"2SRFXIQc82JMhTUxnTjL1eVc8qyPQPu3","expires":{"$date":{"$numberLong":"1730571153557"}},"session":"{\"cookie\":{\"originalMaxAge\":86400000,\"expires\":\"2024-11-02T18:12:33.557Z\",\"secure\":false,\"httpOnly\":true,\"path\":\"/\"},\"user\":{\"user_name\":\"qoqoqoq\",\"email\":\"qoqoqoqo@gmail.com\"}}"}
+
+
+*/
