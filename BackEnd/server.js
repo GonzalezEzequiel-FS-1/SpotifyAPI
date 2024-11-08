@@ -4,6 +4,8 @@ const session = require("express-session")
 const MongoStore = require("connect-mongo")
 const app = express();
 
+//Loading Mongoose Yay! I'm a MERN Dev...
+const mongoose = require('mongoose');
 //Load CORS to have less headaches...
 const cors = require("cors")
 const corsOptions = {
@@ -25,25 +27,22 @@ app.use(session({
     saveUninitialized:false,
     store: MongoStore.create({
         mongoUrl: process.env.DATABASE_URL,
-        collectionName:"SpotNetSessions"
+        collectionName:"SessionStore"
     }), 
     
     cookie:{
         secure: false,
         httpOnly:true,
         maxAge: 1000 * 60 * 60 * 24,
-        name:'Spotnetcookie'
+        name:'SpotCookie'
     }
     
 }))
-app.use((req, res, next) => {
-    console.log("Session Data:", req.session);
-    next();
-});
+
 
 const PORT = process.env.PORT || 3069;
 const DATABASE_URL = process.env.DATABASE_URL;
-//console.log(DATABASE_URL)
+
 // Express native JSON body parser
 app.use(express.json());
 
@@ -51,14 +50,9 @@ app.use(express.json());
 const morgan = require('morgan')
 app.use(morgan('dev'));
 
-
 //Defining base route
 const routes= require("./src/routes")
 app.use('/api', routes);
-
-//Loading Mongoose Yay! I'm a MERN Dev...
-const mongoose = require('mongoose');
-
 
 //Connect to MongoDB
 mongoose.connect(DATABASE_URL);
@@ -70,7 +64,6 @@ db.on('error', error => {
 db.once('open', () => {
     console.log('Database Connected');
 });
-
 
 //Finally have the server listen on the defined port. Nice!
 app.listen(PORT, ()=>{

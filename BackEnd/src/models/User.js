@@ -1,9 +1,26 @@
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt")
+// Define the Token Schema
+const TokenSchema = new mongoose.Schema({
+    accessToken: {
+        type: String,
+        required: true,
+    },
+    refreshToken: {
+        type: String,
+        required: true,
+    },
+    expiresAt: {
+        type: Date,
+        required: true,
+    },
+}, { _id: false });
+
+
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        default: null, 
+        default: null,
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -11,7 +28,7 @@ const UserSchema = new mongoose.Schema({
     },
     last_name: {
         type: String,
-        default: null, 
+        default: null,
         trim: true,
         lowercase: true,
         minlength: 3,
@@ -19,7 +36,7 @@ const UserSchema = new mongoose.Schema({
     },
     user_name: {
         type: String,
-        default: null, 
+        default: null,
         unique: true,
         trim: true,
         lowercase: true,
@@ -52,17 +69,17 @@ const UserSchema = new mongoose.Schema({
         },
     },
     birthday: {
-        day: { 
+        day: {
             type: Number,
             min: 1,
             max: 31,
-            default: null, 
+            default: null,
         },
         month: {
             type: Number,
             min: 1,
             max: 12,
-            default: null, 
+            default: null,
         },
         year: {
             type: Number,
@@ -75,25 +92,27 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    token:{
-        type:String,
-        default:null,
-        unique:true
-    },
-    favorites: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Favorites",
+    accessToken: {
+        type: String,
         default: null,
-    }],
+    },
+    refreshToken: {
+        type: String,
+        default: null,
+    },
+    expiresAt: {
+        type: Date,
+        default: null,
+    },
 });
 
-UserSchema.pre('save', async function(next){
-    if(this.isModified('password')){
+UserSchema.pre('save', async function (next) {
+    if (this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 10)
     }
     next()
 });
-UserSchema.methods.comparePassword = function(password){
+UserSchema.methods.comparePassword = function (password) {
     return bcrypt.compare(password, this.password)
 }
 

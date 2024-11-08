@@ -11,7 +11,7 @@ import LogoImg from '../assets/SpotNetLogo.png';
 export default function Signin() {
     const navigate = useNavigate();
     const [user, setUser] = useState('')
-    
+
     const [password, setPassword] = useState('')
 
     const [error, setError] = useState(null)
@@ -19,34 +19,32 @@ export default function Signin() {
 
 
     const handleSubmit = async (e) => {
-      e.preventDefault(); 
-      try {
-          const response = await axios.post("http://localhost:3069/api/signin", {
-              user: { 
-                  user_name: user, 
-                  password: password 
-              }
-          });
-  
-          // Checking for a successful response
-          if (response.status===200) {
-            const message = response.data.message
-              console.log(`RESPONSE FROM SERVER: ${message}`);
-              fetch('http://localhost:3069/api/home', {
-                method: 'GET',
-                credentials: 'include', 
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-              navigate('/home')
-          }
-      } catch (error) {
-          console.error(`DOES NOT WORK: ${error}`);
-          setError("Login failed. Please check your credentials.");
-      }
-  };
-  
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:3069/api/signin", {
+                user_name: user,
+                password: password
+            });
+
+            // Checking for a successful response
+            if (response.status === 200) {
+                const message = response.data.message
+                console.log(`RESPONSE FROM SERVER: ${message}`);
+                fetch('http://localhost:3069/api/home', {
+                    method: 'GET',
+                    credentials: 'include',
+                })
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+                navigate('/home')
+            }
+        } catch (error) {
+            console.error(`DOES NOT WORK: ${error}`);
+            setError("Login failed. Please check your credentials.");
+        }
+    };
+
     return (
         <Container onSubmit={handleSubmit}>
             <TopContainer>

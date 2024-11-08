@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const API_URL = `http://localhost:3069/api/user`;
+const API_URL = `http://localhost:3069/api/signup`;
 import LogoImg from '../assets/SpotNetLogo.png';
 //const spotify_OAUTH_URI = "http://localhost:3069/api/login"
 export default function SignUp() {
@@ -27,12 +27,12 @@ export default function SignUp() {
         try {
 
             const response = await axios.post(`${API_URL}`, {
-                "user": {
+                
 
                     "user_name": user,
                     "email": email,
                     "password": password,
-                }
+                
             },{ withCredentials: true })
             console.log(response.data)
             //setLoading(false)

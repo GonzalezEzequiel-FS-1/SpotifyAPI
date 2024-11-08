@@ -1,20 +1,12 @@
-const sessionChecker = (req, res, next) => {
-    if (req.session.user && req.session.user.user_name) {
-        const UserName = JSON.stringify(req.session.user);
-        console.log(`FROM CHECK USER: ${UserName}`);
-        next(); 
-    } else {
-        const UserName = JSON.stringify(req.session);
-        console.log(`FROM CHECK USER: ${UserName}`);
-
-        res.status(401).json({
+const sessionChecker = (req, res, next) =>{
+    const user = req.session.user;
+    if (!user) {
+        return res.status(401).json({
             success: false,
-            message: "No session created",
-            data: req.session 
+            message: "Unauthorized: Please log in to access this resource."
         });
     }
-};
-
-module.exports = {
-    sessionChecker
-};
+        next()
+ 
+}
+module.exports = {sessionChecker}
