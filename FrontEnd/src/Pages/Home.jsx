@@ -9,16 +9,15 @@ const Home = () => {
   const handleLogout = async (e) =>{
     e.preventDefault()
     try {
-      const response = await axios.get("http://localhost:3069/api/logout")
-      if(response){
-        console.log(`works`)
-        
+      const response = await axios.get("http://localhost:3069/api/signout")
+      if(response.status===200){
+        logout()
+        console.log(`User Signed off successfully`)
+        navigate('/signin')
       }
     } catch (error) {
       console.log(error.message)
-      logout()
-        console.log(`User Signed off successfully`)
-        navigate('/signin')
+      
     }
     
 
