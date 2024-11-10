@@ -2,6 +2,7 @@ const User = require("../../models/User")
 const signIn = async (req, res) => {
     const user_name  = req.body.user_name;
     const password = req.body.password;
+    console.log(`SESSION DATA >>>>>>>${JSON.stringify(req.session)}<<<<<<<<`)
 
     try {
         const loggingUser = await User.findOne({ user_name });
@@ -18,9 +19,8 @@ const signIn = async (req, res) => {
                 message: `Password did not match`
             });
         }
-
-        req.session.user = { user_name: loggingUser.user_name };
-        req.session.save((error) => {
+        req.session.user = { user_name: user_name };
+                req.session.save((error) => {
             if (error) {
                 console.error(error.message);
                 return res.status(500).json({

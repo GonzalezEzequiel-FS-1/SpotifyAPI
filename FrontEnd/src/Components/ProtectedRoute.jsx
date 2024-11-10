@@ -1,18 +1,14 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import PropTypes from "prop-types";
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
 
-const ProtectedRoute = ({children})=>{
-    const { isAuthenticated } = useAuth()
-    if(!isAuthenticated){
-    return <Navigate to={"/signin"} replace />
-    }return(
-        children
-    )
-  
-}
-ProtectedRoute.propTypes={
-    children:PropTypes.node.isRequired
-}
+  if (!isAuthenticated) {
+    return <Navigate to="/signin" />;
+  }
+
+  return children;
+};
+
 export default ProtectedRoute;

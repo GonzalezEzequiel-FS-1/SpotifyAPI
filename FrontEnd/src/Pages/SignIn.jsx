@@ -2,43 +2,38 @@ import styled from "styled-components";
 import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import TextField from "../Components/Fields/TextField";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 //const API_URL = `http://localhost:3069/api/user`;
 import LogoImg from '../assets/SpotNetLogo.png';
 //const spotify_OAUTH_URI = "http://localhost:3069/api/login"
 import  { useAuth } from '../context/AuthContext'
+
 export default function Signin() {
     const navigate = useNavigate();
-    const [user, setUser] = useState('')
+    const [userName, setUserName] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
     const {login} = useAuth();
     //const[loading, setLoading]=useState(true)
 
-
+    // if(!user || !setUser){
+    //     console.log('no user logged in')
+    // }
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post("http://localhost:3069/api/signin", {
-                user_name: user,
+                user_name: userName,
                 password: password
+            }, {
+                withCredentials: true
             });
-
             // Checking for a successful response
             if (response.status === 200) {
                 login()
-                const message = response.data.message
-                console.log(`RESPONSE FROM SERVER: ${message}`);
-                fetch('http://localhost:3069/api/home', {
-                    method: 'GET',
-                    credentials: 'include',
-                })
-                    .then(response => response.json())
-                    .then(data => console.log(data))
-                    .catch(error => console.error('Error:', error));
-                navigate('/home')
+                navigate(`/home/${userName}`)
             }
         } catch (error) {
             console.error(`DOES NOT WORK: ${error}`);
@@ -64,8 +59,8 @@ export default function Signin() {
                 <TextField
                     placeholder=""
                     type="text"
-                    value={user}
-                    onChange={(e) => setUser(e.target.value)}
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
                 />
             </FieldContainer>
             <FieldContainer>

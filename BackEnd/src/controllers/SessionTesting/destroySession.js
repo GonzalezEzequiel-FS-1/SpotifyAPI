@@ -2,7 +2,7 @@ const User = require('../../models/User')
 const destroySession = async (req, res) => {
     const user = req.session.user;
     try {
-        // Destroy the session and handle the callback
+       
        
         req.session.destroy((error) => {
             if (error) {

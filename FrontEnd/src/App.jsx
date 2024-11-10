@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './Pages/Home'
 import SignIn from './Pages/SignIn'
@@ -7,34 +6,29 @@ import FourOhFour from './Pages/FourOhFour'
 import NavBar from './Components/NavBar'
 import styled from 'styled-components'
 import SpotiLoad from './Pages/SpotiLoad'
-import AuthProvider from './context/AuthContext'
 import ProtectedRoute from './Components/ProtectedRoute'
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <MainContainer>
-          <NavBar />
-          <Routes>
-            <Route path='/signin' element={<SignIn />} />
-            <Route path='/signup' element={<SignUp />} />
-            <Route path='/*' element={<FourOhFour />} />
-            <Route path='/spotify-login' element={<SpotiLoad />} />
-
-            <Route
-              path='/home'
-              element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
-
-          </Routes>
-        </MainContainer>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <MainContainer>
+        <NavBar />
+        <Routes>
+          <Route path='/signin' element={<SignIn />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/*' element={<FourOhFour />} />
+          <Route path='/spotify-login' element={<SpotiLoad />} />
+          <Route
+            path='/home/:user'
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </MainContainer>
+    </Router>
   )
 }
 

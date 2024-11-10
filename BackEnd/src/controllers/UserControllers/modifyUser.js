@@ -1,9 +1,9 @@
 const User = require("../../models/User")
 const modifyUser = async (req, res) => {
-    const user_name = req.params.name; 
-    const { first_name, last_name, email, password, birthday } = req.body;
+    const user = req.params.name;
+    const { user_name, first_name, last_name, email, password, birthday } = req.body;
 
-    console.log('Request Body:', req.body); // Log the request body to check if it contains the correct fields
+    console.log('Request Body:', req.body);
 
     const updatedData = {};
 
@@ -14,11 +14,19 @@ const modifyUser = async (req, res) => {
     if (birthday) updatedData.birthday = birthday;
     if (user_name) updatedData.user_name = user_name;
 
-    console.log('Updating user:', user_name, 'with data:', updatedData);
+    console.log(`Updating user: ${user}, with data:, ${updatedData}`);
 
     try {
-        const updatedUser = await User.findOneAndUpdate(
-            { user_name },
+        const userData = await User.findOne({ user_name: user });
+        if (!userData) {
+            return res.status(404).json({
+                success: false,
+                message: `User ${user} not found.`,
+            });
+        }
+        const user_id = userData._id;
+        const updatedUser = await User.findByIdAndUpdate(
+            { _id: user_id },
             updatedData,
             { new: true, runValidators: true }
         );
@@ -26,13 +34,13 @@ const modifyUser = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({
                 success: false,
-                message: `User ${user_name} not found.`
+                message: `User ${user} not found.`
             });
         }
 
         return res.status(200).json({
             success: true,
-            message: `Successfully edited user ${user_name}`,
+            message: `Successfully edited user ${user}`,
             data: updatedUser
         });
     } catch (error) {
