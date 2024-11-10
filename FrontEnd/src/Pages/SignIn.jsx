@@ -8,13 +8,13 @@ import axios from "axios";
 //const API_URL = `http://localhost:3069/api/user`;
 import LogoImg from '../assets/SpotNetLogo.png';
 //const spotify_OAUTH_URI = "http://localhost:3069/api/login"
+import  { useAuth } from '../context/AuthContext'
 export default function Signin() {
     const navigate = useNavigate();
     const [user, setUser] = useState('')
-
     const [password, setPassword] = useState('')
-
     const [error, setError] = useState(null)
+    const {login} = useAuth();
     //const[loading, setLoading]=useState(true)
 
 
@@ -28,6 +28,7 @@ export default function Signin() {
 
             // Checking for a successful response
             if (response.status === 200) {
+                login()
                 const message = response.data.message
                 console.log(`RESPONSE FROM SERVER: ${message}`);
                 fetch('http://localhost:3069/api/home', {

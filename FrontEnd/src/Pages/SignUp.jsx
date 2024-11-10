@@ -3,13 +3,11 @@ import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import TextField from "../Components/Fields/TextField";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const API_URL = `http://localhost:3069/api/signup`;
 import LogoImg from '../assets/SpotNetLogo.png';
 
 export default function SignUp() {
-    const navigate = useNavigate();
     const [user, setUser] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
