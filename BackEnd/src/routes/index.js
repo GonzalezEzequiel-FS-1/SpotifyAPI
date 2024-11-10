@@ -31,8 +31,14 @@ router.patch('/user/:name', modifyUser);
 router.post('/signin', signIn);
 router.post('/signup', signUp);
 router.get('/signout', (req, res) => { res.status(200).json({ message: "logged out" }) });
-router.get("/redirect", redirectToSpotifyAuth)
-router.get("/callback", callback)
+router.get("/redirect", (req, res) => {
+    const user_name = req.query.user_name; // Ensure user_name is passed as a query parameter
+    if (!user_name) {
+        return res.status(400).json({ success: false, message: 'user_name query parameter is required' });
+    }
+    redirectToSpotifyAuth(req, res);
+});
+router.get("/callback", callback);
 
 
 //Session Routes

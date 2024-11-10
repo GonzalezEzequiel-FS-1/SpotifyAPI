@@ -2,10 +2,13 @@ const axios = require('axios');
 const User = require('../../models/User');
 
 const callback = async (req, res) => {
-    const { code, user_name } = req.query; // Ensure `user_name` is passed as a query parameter
-    const redirectUri = 'YOUR_REDIRECT_URI'; // Replace with your actual redirect URI
-    const clientId = 'YOUR_SPOTIFY_CLIENT_ID';
-    const clientSecret = 'YOUR_SPOTIFY_CLIENT_SECRET';
+    const { code, state: user_name } = req.query; // Retrieve user_name from state parameter
+    const redirectUri = process.env.REDIRECT_URI; // Replace with your actual redirect URI
+    const clientId = process.env.CLIENT_ID;
+    const clientSecret = process.env.CLIENT_SECRET;
+
+    // Log the user_name to verify it is being passed correctly
+    console.log('Received user_name:', user_name);
 
     try {
         // Step 1: Exchange the authorization code for tokens
@@ -40,12 +43,8 @@ const callback = async (req, res) => {
         // Step 5: Save updated user data
         await user.save();
 
-        // Step 6: Respond to client
-        res.status(200).json({
-            success: true,
-            message: 'User tokens updated successfully',
-            user,
-        });
+        // Step 6: Redirect to the home page
+        res.redirect('http://localhost:5173/home');
         
     } catch (error) {
         console.error('Error handling Spotify callback:', error.response?.data || error.message);

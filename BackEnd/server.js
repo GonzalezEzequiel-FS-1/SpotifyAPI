@@ -20,6 +20,12 @@ app.use(cors(corsOptions));
 const dotEnv = require("dotenv")
 dotEnv.config()
 
+// Ensure that the environment variables are loaded
+if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+    console.error("Spotify client ID or client secret is not set in environment variables.");
+    process.exit(1);
+}
+
 //Set Up Sessions
 app.use(session({
     secret:process.env.SESSION_SECRET,

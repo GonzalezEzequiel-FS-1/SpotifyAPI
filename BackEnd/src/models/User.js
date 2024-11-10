@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+
 // Define the Token Schema
 const TokenSchema = new mongoose.Schema({
     accessToken: {
@@ -15,7 +16,6 @@ const TokenSchema = new mongoose.Schema({
         required: true,
     },
 }, { _id: false });
-
 
 const UserSchema = new mongoose.Schema({
     first_name: {
@@ -59,14 +59,6 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password is required"],
-        minlength: 6,
-        maxlength: 16,
-        validate: {
-            validator: function (value) {
-                return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,16}$/.test(value);
-            },
-            message: "Password should contain 6 to 16 characters, at least one uppercase letter, one lowercase letter, one number and one special character",
-        },
     },
     birthday: {
         day: {
@@ -108,17 +100,22 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', async function (next) {
     if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10)
+        // Validate the password before hashing
+        const passwordValidationRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,16}$/;
+        if (!passwordValidationRegex.test(this.password)) {
+            const error = new Error("Password should contain 6 to 16 characters, at least one uppercase letter, one lowercase letter, one number and one special character");
+            return next(error);
+        }
+        this.password = await bcrypt.hash(this.password, 10);
     }
-    next()
+    next();
 });
+
 UserSchema.methods.comparePassword = function (password) {
-    return bcrypt.compare(password, this.password)
-}
+    return bcrypt.compare(password, this.password);
+};
 
-
-
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('User', UserSchema);
 
 /*
 Example body for Schema
@@ -138,6 +135,4 @@ Example body for Schema
     "favorites": []
   }
 }
-
-
 */

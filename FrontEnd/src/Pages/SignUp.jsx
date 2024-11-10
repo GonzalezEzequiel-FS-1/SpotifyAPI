@@ -7,40 +7,41 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const API_URL = `http://localhost:3069/api/signup`;
 import LogoImg from '../assets/SpotNetLogo.png';
-//const spotify_OAUTH_URI = "http://localhost:3069/api/login"
+
 export default function SignUp() {
     const navigate = useNavigate();
-    const [user, setUser] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirm, setConfirm] = useState('')
-    const [error, setError] = useState(null)
-    //const[loading, setLoading]=useState(true)
-
+    const [user, setUser] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirm, setConfirm] = useState('');
+    const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (password !== confirm) {
-            setError("Passwords does not match")
-            return
+            setError("Passwords do not match");
+            return;
         }
         try {
+            await axios.post(API_URL, {
+                "user_name": user,
+                "email": email,
+                "password": password,
+            }, { withCredentials: true });
 
-            const response = await axios.post(`${API_URL}`, {
-                
+            // Make a request to the backend /redirect route with user_name as query parameter
+            const response = await axios.get(`http://localhost:3069/api/redirect`, {
+                params: { user_name: user },
+                withCredentials: true
+            });
 
-                    "user_name": user,
-                    "email": email,
-                    "password": password,
-                
-            },{ withCredentials: true })
-            console.log(response.data)
-            //setLoading(false)
-            navigate(`/spotify-login?user=${user}`)
+            // Redirect to the URL provided by the backend
+            window.location.href = response.data.redirectURL;
         } catch (error) {
             setError(error.response?.data?.message || error.message);
         }
     }
+
     return (
         <Container onSubmit={handleSubmit}>
             <TopContainer>
@@ -91,8 +92,6 @@ export default function SignUp() {
                     onChange={(e) => setConfirm(e.target.value)}
                 />
             </FieldContainer>
-
-
 
             <SubmitBtn type="submit" text={"SUBMIT"} />
             <BottomText>By signing up to create an account, you are accepting our terms of service and privacy policy </BottomText>
