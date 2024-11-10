@@ -32,10 +32,12 @@ const Home = () => {
     //console.log(user);
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3069/api/user/zeke`,{
+      await axios.post(`http://localhost:3069/api/token/refresh`,{
+        user:user
+      },{
         withCredentials: true
     });
-      console.log(response.data.data.accessToken);
+      //console.log(response.data.data.accessToken);
       // Handle the response data here, e.g., store it in a state
     } catch (error) {
       console.log(error.message);

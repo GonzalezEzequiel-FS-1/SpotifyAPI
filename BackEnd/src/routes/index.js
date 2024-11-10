@@ -12,6 +12,9 @@ const getOneUser = require('../controllers/UserControllers/getOneUser');
 const getAllUsers = require('../controllers/UserControllers/getAllUsers');
 const deleteUser = require('../controllers/UserControllers/deleteUser');
 
+//Refreshing Tokens manually
+const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
+
 // Session Protection
 
 const {sessionTester} = require('../middlewares/middlewares');
@@ -34,7 +37,7 @@ router.post('/signin', signIn);
 router.post('/signup', setSession, signUp);
 router.get('/signout', (req, res) => { res.status(200).json({ message: "logged out" }) });
 router.get("/redirect", (req, res) => {
-    const user_name = req.query.user_name; // Ensure user_name is passed as a query parameter
+    const user_name = req.query.user_name;
     if (!user_name) {
         return res.status(400).json({ success: false, message: 'user_name query parameter is required' });
     }
@@ -48,5 +51,5 @@ router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
 router.get('/session/destroy', destroySession)
 
-
+router.post('/token/refresh', tokenRefresher)
 module.exports = router;
