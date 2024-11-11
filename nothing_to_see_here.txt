@@ -1,0 +1,11 @@
+PORT=3069
+DATABASE_URL="mongodb+srv://egonzalezhidalgo:TrashPanda6000@project-portfolio-iii.dhlxz.mongodb.net/?retryWrites=true&w=majority&appName=Project-Portfolio-III"
+SPOTIFY_TOKEN="BQDLtjgKxhVox0_qCCGhsDFzIv14S2adLYcmgwevMkanw0ePe7-if9bqM5rlhmRzQ4Ar35UIw472wQKMlisNgXmjOF_90EgGEhO5Rs6NWWiVOx6UU0I"
+TOKEN_URL="https://accounts.spotify.com/api/token"
+CLIENT_ID="900924d496154e33817d58f496c06d3e"
+CLIENT_SECRET="ad8922c9a8a34ddc9bd96da4889b8908"
+REDIRECT_URI="http://localhost:3069/api/callback"
+FRONTEND_URL="http://localhost:5173/home"
+AUTH_URL="https://accounts.spotify.com/authorize"
+SESSION_SECRET="xN9D2Q:Eoe!pJ!&.s23Dj]G}a-a83g;r.X}kXOYN;AO}mk/{>3++p-QH(YHn=ig"
+NODE_ENV="development"

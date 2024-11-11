@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+/*const fetch = require('node-fetch');
 
 const clientId = process.env.CLIENT_ID;
 const redirectURI = process.env.REDIRECT_URI
@@ -69,3 +69,4 @@ module.exports = {
     redirectToAuthCodeFlow,
     callback2
 };
+*/

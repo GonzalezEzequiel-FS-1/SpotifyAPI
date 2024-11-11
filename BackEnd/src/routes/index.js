@@ -1,53 +1,59 @@
+// Create an instance of Express
 const express = require("express");
+
+//Create an instance eof router
 const router = express.Router()
-const {
-    createUser,
-    deleteUser,
-    modifyUser,
-    getOneUser,
-    getAllUsers
-} = require('../controllers/userController')
-const {
-    callback,
-    redirectToSpotifyAuth
-} = require("../controllers/spotifyControllers");
-const { redirectToAuthCodeFlow, callback2} = require("../controllers/controllersPerSpoti");
+
+//Import User CRUD Modules
+const signUp = require('../controllers/UserControllers/signUp');
+const signIn = require('../controllers/UserControllers/signIn');
+const modifyUser = require('../controllers/UserControllers/modifyUser');
+const getOneUser = require('../controllers/UserControllers/getOneUser');
+const getAllUsers = require('../controllers/UserControllers/getAllUsers');
+const deleteUser = require('../controllers/UserControllers/deleteUser');
+const loadProfile = require('../controllers/SpotifyControllers/loadProfile')
+
+//Refreshing Tokens manually
+//const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
+
+// Session Protection
+
+const {sessionTester} = require('../middlewares/middlewares');
+const sessionTesting = require('../controllers/SessionTesting/sessionTester')
+const setSession = require('../controllers/SessionTesting/setSession')
+const destroySession = require('../controllers/SessionTesting/destroySession');
+const  redirectToSpotifyAuth  = require("../controllers/SpotifyControllers/Redirect");
+const  callback  = require("../controllers/SpotifyControllers/Callback");
+const checkActiveToken = require("../middlewares/checkActiveToken");
 
 
+//User CRUD Routes
+router.get('/user', sessionTester, getAllUsers);
+router.get('/user/:name', sessionTester, getOneUser);
+router.delete('/user/:name', sessionTester , deleteUser);
+router.patch('/user/:name', sessionTester, modifyUser);
 
 
-// User Routes
-router.post('/user', createUser);
-router.delete("/user/:name", deleteUser);
-router.patch("/user/:user_name", modifyUser);
-router.get("/user/:user_name", getOneUser)
-router.get("/user", getAllUsers)
-
-router.get("/test",(req, res)=>{
-    try {
-        res.status(200).json({
-            success:true,
-            message:`API working`
-        })
-    } catch (error) {
-        res.status(500).json({
-            success:false,
-            message:`${req.method} failed, ${error.message}`
-        })
+//SignUp, SignIn and Out
+router.post('/signin', signIn);
+router.post('/signup', setSession, signUp);
+router.get('/signout', destroySession);
+router.get("/redirect", (req, res) => {
+    const user_name = req.query.user_name;
+    if (!user_name) {
+        return res.status(400).json({ success: false, message: 'user_name query parameter is required' });
     }
-})
+    redirectToSpotifyAuth(req, res);
+});
+router.get("/callback", callback);
 
 
-// Spotify's API Routes:
+//Session Routes
+router.get("/session", sessionTesting)
+router.post('/session/destroy', destroySession);
+router.get('/profile', destroySession)
 
-// Route to initiate the login process
-router.get('/login', redirectToSpotifyAuth);
-
-// Callback route that Spotify will redirect to
-router.get('/callback', callback);
-
-//Testing
-router.get('/auth/spotify', redirectToAuthCodeFlow )
-
-
+//router.post('/token/refresh', tokenRefresher)
+router.get('/token/check', checkActiveToken)
+router.get('/token/check', checkActiveToken)
 module.exports = router;

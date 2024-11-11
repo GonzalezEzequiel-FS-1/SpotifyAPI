@@ -1,22 +1,54 @@
 //Loading Express and its instance
 const express = require('express');
+const session = require("express-session")
+const MongoStore = require("connect-mongo")
 const app = express();
 
+//Loading Mongoose Yay! I'm a MERN Dev...
+const mongoose = require('mongoose');
 //Load CORS to have less headaches...
 const cors = require("cors")
 const corsOptions = {
     origin: 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials:true
 };
 app.use(cors(corsOptions));
 
 //Load DotEnv and the current variables
 const dotEnv = require("dotenv")
 dotEnv.config()
+
+// Ensure that the environment variables are loaded
+if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
+    console.error("Spotify client ID or client secret is not set in environment variables.");
+    process.exit(1);
+}
+
+//Set Up Sessions
+app.use(session({
+    secret:process.env.SESSION_SECRET,
+    resave:false,
+    saveUninitialized:false,
+    store: MongoStore.create({
+        mongoUrl: process.env.DATABASE_URL,
+        collectionName:"SessionStore"
+    }), 
+    
+    cookie:{
+        secure: false,
+        httpOnly:true,
+        maxAge: 1000 * 60 * 60 * 24,
+        name:'SpotCookie'
+    }
+    
+}))
+
+
 const PORT = process.env.PORT || 3069;
 const DATABASE_URL = process.env.DATABASE_URL;
-console.log(DATABASE_URL)
+
 // Express native JSON body parser
 app.use(express.json());
 
@@ -24,13 +56,9 @@ app.use(express.json());
 const morgan = require('morgan')
 app.use(morgan('dev'));
 
-
 //Defining base route
 const routes= require("./src/routes")
 app.use('/api', routes);
-
-//Loading Mongoose Yay! I'm a MERN Dev...
-const mongoose = require('mongoose');
 
 //Connect to MongoDB
 mongoose.connect(DATABASE_URL);
@@ -42,7 +70,6 @@ db.on('error', error => {
 db.once('open', () => {
     console.log('Database Connected');
 });
-
 
 //Finally have the server listen on the defined port. Nice!
 app.listen(PORT, ()=>{
