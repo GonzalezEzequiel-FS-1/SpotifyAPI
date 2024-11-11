@@ -3,7 +3,7 @@ const express = require('express');
 const session = require("express-session")
 const MongoStore = require("connect-mongo")
 const app = express();
-
+const path = require('path')
 //Loading Mongoose Yay! I'm a MERN Dev...
 const mongoose = require('mongoose');
 //Load CORS to have less headaches...
