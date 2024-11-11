@@ -71,12 +71,12 @@ db.once('open', () => {
     console.log('Database Connected');
 });
 
-app.use(express.static(path.join("/Users/n00bst3r/Documents/GitHub/WDV339-Spotify-Project/BackEnd/public")));
+app.use(express.static(path.join(__dirname, 'public', "dist")));
 
 
-app.get('*', (req, res) => {
-  res.sendFile("/Users/n00bst3r/Documents/GitHub/WDV339-Spotify-Project/BackEnd/public/dist/index.html");
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', "dist", 'index.html'));
+// });
 
 //Finally have the server listen on the defined port. Nice!
 app.listen(PORT, ()=>{
