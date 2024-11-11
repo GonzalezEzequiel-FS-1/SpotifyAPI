@@ -32,7 +32,7 @@ const Home = () => {
     //console.log(user);
     setLoading(true);
     try {
-      await axios.post(`http://localhost:3069/api/token/refresh`,{
+      await axios.get(`http://localhost:3069/api/profile`,{
         user:user
       },{
         withCredentials: true

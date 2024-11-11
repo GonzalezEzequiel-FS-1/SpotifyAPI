@@ -11,9 +11,10 @@ const modifyUser = require('../controllers/UserControllers/modifyUser');
 const getOneUser = require('../controllers/UserControllers/getOneUser');
 const getAllUsers = require('../controllers/UserControllers/getAllUsers');
 const deleteUser = require('../controllers/UserControllers/deleteUser');
+const loadProfile = require('../controllers/SpotifyControllers/loadProfile')
 
 //Refreshing Tokens manually
-const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
+//const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
 
 // Session Protection
 
@@ -23,6 +24,7 @@ const setSession = require('../controllers/SessionTesting/setSession')
 const destroySession = require('../controllers/SessionTesting/destroySession');
 const  redirectToSpotifyAuth  = require("../controllers/SpotifyControllers/Redirect");
 const  callback  = require("../controllers/SpotifyControllers/Callback");
+const checkActiveToken = require("../middlewares/checkActiveToken");
 
 
 //User CRUD Routes
@@ -35,7 +37,7 @@ router.patch('/user/:name', sessionTester, modifyUser);
 //SignUp, SignIn and Out
 router.post('/signin', signIn);
 router.post('/signup', setSession, signUp);
-router.get('/signout', (req, res) => { res.status(200).json({ message: "logged out" }) });
+router.get('/signout', destroySession);
 router.get("/redirect", (req, res) => {
     const user_name = req.query.user_name;
     if (!user_name) {
@@ -49,7 +51,9 @@ router.get("/callback", callback);
 //Session Routes
 router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
-router.get('/session/destroy', destroySession)
+router.get('/profile', destroySession)
 
-router.post('/token/refresh', tokenRefresher)
+//router.post('/token/refresh', tokenRefresher)
+router.get('/token/check', checkActiveToken)
+router.get('/token/check', checkActiveToken)
 module.exports = router;
