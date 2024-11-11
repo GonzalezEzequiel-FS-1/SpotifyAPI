@@ -71,6 +71,13 @@ db.once('open', () => {
     console.log('Database Connected');
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 //Finally have the server listen on the defined port. Nice!
 app.listen(PORT, ()=>{
     console.log( `Server running on port ${PORT}`)
