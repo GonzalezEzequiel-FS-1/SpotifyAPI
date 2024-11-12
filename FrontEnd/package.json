@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/material": "^6.1.6",
+    "@mui/styled-engine-sc": "^6.1.6",
     "axios": "^1.7.7",
     "normalize.css": "^8.0.1",
     "prop-types": "^15.8.1",

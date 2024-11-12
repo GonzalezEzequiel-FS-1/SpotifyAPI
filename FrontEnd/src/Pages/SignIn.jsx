@@ -1,26 +1,21 @@
 import styled from "styled-components";
 import SubmitBtn from "../Components/Buttons/SubmitBtn";
-import TextField from "../Components/Fields/TextField";
+//import TextField from "../Components/Fields/TextField";
 import { Link } from "react-router-dom";
-import { useState} from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-//const API_URL = `http://localhost:3069/api/user`;
 import LogoImg from '../assets/SpotNetLogo.png';
-//const spotify_OAUTH_URI = "http://localhost:3069/api/login"
-import  { useAuth } from '../context/AuthContext'
+import { useAuth } from '../context/AuthContext';
+import MUIField from "../Components/Fields/MUIField";
 
 export default function Signin() {
     const navigate = useNavigate();
-    const [userName, setUserName] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState(null)
-    const {login} = useAuth();
-    //const[loading, setLoading]=useState(true)
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+    const { login } = useAuth();
 
-    // if(!user || !setUser){
-    //     console.log('no user logged in')
-    // }
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -30,10 +25,9 @@ export default function Signin() {
             }, {
                 withCredentials: true
             });
-            // Checking for a successful response
             if (response.status === 200) {
-                login()
-                navigate(`/home/${userName}`)
+                login();
+                navigate(`/home/${userName}`);
             }
         } catch (error) {
             console.error(`DOES NOT WORK: ${error}`);
@@ -55,31 +49,30 @@ export default function Signin() {
             </TitleContainer>
 
             <FieldContainer>
-                <Label>User Name</Label>
-                <TextField
+                {/* <Label>User Name</Label> */}
+                <MUIField
+                    label="User Name"
                     placeholder=""
                     type="text"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                 />
-            </FieldContainer>
-            <FieldContainer>
-                <Label>Password</Label>
-                <TextField
+            
+                {/* <Label>Password</Label> */}
+                <MUIField
+                    label="Password"
                     placeholder=""
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+            
+                <SubmitBtn type="submit" text={"SUBMIT"} />
             </FieldContainer>
-
-
-
-            <SubmitBtn type="submit" text={"SUBMIT"} />
             <SubTitle>No account?<TextLink to={"/signup"}>Create one!</TextLink></SubTitle>
             <BottomText>By logging in, you are accepting our terms of service and privacy policy </BottomText>
         </Container>
-    )
+    );
 }
 
 const Logo = styled.img`
@@ -88,11 +81,11 @@ const Logo = styled.img`
     height: auto; 
 `;
 const TitleContainer = styled.div`
-display: flex;
-align-items: flex-start;
-flex-direction: column;
-width:100%;
-`
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    width:100%;
+`;
 
 const Container = styled.form`
     display:flex;
@@ -106,45 +99,45 @@ const Container = styled.form`
     margin-top: 2rem;
     max-width: 28rem;
     padding:2rem;
-`
+`;
 const FieldContainer = styled.div`
     display:flex;
     flex-direction: column;
-    align-items: left;
-    gap:0rem;
-
-`
-const Label = styled.label`
-    text-align:left;
-    font-family: "Palanquin";
-    font-weight:700;
-`
+    align-items: center;
+    gap:1rem;
+    width: 100%;
+`;
+// const Label = styled.label`
+//     text-align:left;
+//     font-family: "Palanquin";
+//     font-weight:700;
+// `;
 const Title = styled.h3`
     font-family: "Catamaran", "Sans Serif";
     letter-spacing: .10rem;
     text-transform: capitalize;
     text-align: left;
-`
+`;
 const SubTitle = styled.p`
     font-family: Sintony;
     font-size: 1rem;
     line-height: 10%;
     color:#121212;
     font-weight: 600;
-`
+`;
 const TopContainer = styled.div`
     width:100%;
     font-size: 1.5rem;
     display:flex;
     align-items: center;
     flex-direction:column;
-`
+`;
 const TextLink = styled(Link)`
     text-decoration: none;
     margin-left:.25rem;
     color:#ffffff80;
     cursor: pointer;
-`
+`;
 const BottomText = styled.p`
     font-family: Sintony;
     font-size: .8rem;
@@ -153,7 +146,7 @@ const BottomText = styled.p`
     margin-top:1rem;
     color:#ffffff80;
     font-weight: 600;
-`
+`;
 const ErrorField = styled.p`
     color:red;
     font-size:.75rem;
@@ -161,4 +154,4 @@ const ErrorField = styled.p`
     letter-spacing: .25rem;
     text-transform: uppercase;
     text-align: center;
-`
+`;

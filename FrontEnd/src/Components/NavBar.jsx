@@ -10,7 +10,7 @@ export default function NavBar (){
             <TopContainers><Avatar></Avatar></TopContainers>
             <TopContainers>
                 <LinkText to={"/home/zeke"}>Home</LinkText>
-                <LinkText to={"/home/zeke"}>Search</LinkText>
+                <LinkText to={"/search"}>Search</LinkText>
                 <LinkText to={"/home/zeke"}>Library</LinkText>
             </TopContainers>
             <TopContainers><LinkText to={"/home"}>Nav and Profile</LinkText></TopContainers>
@@ -26,15 +26,16 @@ const Container = styled.header`
     justify-content: space-between;
     padding:1rem;
     gap:1rem;
-    width:20%;
+    width:15%;
     height:100%;
     position: fixed;
+    z-index: 10;
     left:0;
     transition: all, 1s ease-in-out;
     //background-color:red;
     background-color:#55555500;
     filter: blur(10px);
-    transform: translateX(-20.5rem);
+    transform: translateX(-15.5rem);
      &:hover{
         filter:blur(0);
         background-color: #22222220;
@@ -83,6 +84,6 @@ background-repeat: no-repeat;
 background-size:cover;
 width:80%;
 height:100%;
-background-color: white;
+
 border-radius: 20px;
 `

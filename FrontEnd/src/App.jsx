@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import SpotiLoad from './Pages/SpotiLoad'
 import ProtectedRoute from './Components/ProtectedRoute'
 import { useAuth } from './context/AuthContext'
+import Player from './Components/Player'
+import Search from './Pages/Search'
 
 export default function App() {
   //Using isAuthenticated to show or hide the navbar
@@ -30,7 +32,16 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path='/search'
+            element={
+              <ProtectedRoute>
+                <Search />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
+        {isAuthenticated && <Player />}
       </MainContainer>
     </RouterContainer>
   );
@@ -62,11 +73,4 @@ const MainContainer = styled.div`
     #000 80%
   );
 `;
-const SideBar = styled(NavBar)`
-transform: translateX(-20.5rem);
-transition: all 1s ease-in-out;
-    &:hover{
-        background-color: red;
-        transform: translateX(0);
-    }
-  `;
+
