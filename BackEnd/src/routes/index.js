@@ -53,7 +53,7 @@ router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
 router.get('/profile', destroySession)
 
-//router.post('/token/refresh', tokenRefresher)
-router.get('/token/check', checkActiveToken)
-router.get('/token/check', checkActiveToken)
+
+router.post('/token/check', checkActiveToken)
+
 module.exports = router;

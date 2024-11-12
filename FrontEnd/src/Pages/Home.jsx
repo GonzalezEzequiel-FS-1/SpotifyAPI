@@ -3,13 +3,15 @@ import styled from "styled-components";
 import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import ArtistCard from "../Components/cards/ArtistCard";
 import { useState } from "react";
 
 const Home = () => {
+
   const { user } = useParams();
   const { logout } = useAuth();
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(false);
 
   const handleLogout = async (e) => {
@@ -32,11 +34,11 @@ const Home = () => {
     //console.log(user);
     setLoading(true);
     try {
-      await axios.get(`http://localhost:3069/api/profile`,{
-        user:user
-      },{
+      await axios.post(`http://localhost:3069/api/token/check`, {
+        user: user
+      }, {
         withCredentials: true
-    });
+      });
       //console.log(response.data.data.accessToken);
       // Handle the response data here, e.g., store it in a state
     } catch (error) {
@@ -54,6 +56,9 @@ const Home = () => {
 
   return (
     <Container>
+      <TopContainer>
+        <ArtistCard />
+      </TopContainer>
       <Title>Welcome {user}</Title>
       <SubTitle>GET YOUR PROFILE</SubTitle>
       <SubmitBtn onClick={handleGetProfile} text="Get Profile" />
@@ -65,20 +70,19 @@ const Home = () => {
 
 export default Home;
 
-const Container = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #99999950;
-  border-radius: 10px;
   box-shadow: 0px 0px 15px 10px #0a122a;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
-  max-width: 28rem;
+  width: 100vw;
+  height:100%;
   padding: 2rem;
 `;
-
+const TopContainer = styled.div`
+height:40%;
+`
 const Title = styled.h3`
   font-family: "Catamaran", "Sans Serif";
   letter-spacing: 0.10rem;

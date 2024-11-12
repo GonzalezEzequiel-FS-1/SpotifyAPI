@@ -97,7 +97,7 @@ width:100%;
 const Container = styled.form`
     display:flex;
     flex-direction: column;
-    background-color: #FFF;
+    background-color: #FFFFFF80;
     border:1px solid 99999950;
     border-radius:10px;
     box-shadow: 0px 0px 15px 10px #0A122A;
@@ -142,7 +142,7 @@ const TopContainer = styled.div`
 const TextLink = styled(Link)`
     text-decoration: none;
     margin-left:.25rem;
-    color:#999999;
+    color:#ffffff80;
     cursor: pointer;
 `
 const BottomText = styled.p`
@@ -151,7 +151,7 @@ const BottomText = styled.p`
     line-height: 90%;
     text-align: center;
     margin-top:1rem;
-    color:#999999;
+    color:#ffffff80;
     font-weight: 600;
 `
 const ErrorField = styled.p`
