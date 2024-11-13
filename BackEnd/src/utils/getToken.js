@@ -42,6 +42,10 @@ const getToken = async (user) => {
         };
 
     } catch (error) {
+        console.log('==> Entering Error checks')
+        if(error.response.status === 401 ){
+            console.log('EXPIRED TOKEN')
+        }
         console.error('Error fetching user token:', error.message);
         return {
             success: false,

@@ -10,6 +10,7 @@ import ProtectedRoute from './Components/ProtectedRoute'
 import { useAuth } from './context/AuthContext'
 import Player from './Components/Player'
 import Search from './Pages/Search'
+import Profile from './Pages/Profile'
 
 export default function App() {
   //Using isAuthenticated to show or hide the navbar
@@ -24,22 +25,15 @@ export default function App() {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/*' element={<FourOhFour />} />
           <Route path='/spotify-login' element={<SpotiLoad />} />
-          <Route
-            path='/home/:user'
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/search'
-            element={
-              <ProtectedRoute>
-                <Search />
-              </ProtectedRoute>
-            }
-          />
+          <Route path='/home/:user' element={
+              <ProtectedRoute><Home /></ProtectedRoute>
+            }/>
+          <Route  path='/search'  element={
+              <ProtectedRoute><Search /></ProtectedRoute>
+            }/>
+          <Route  path='/profile'  element={
+              <ProtectedRoute><Profile /></ProtectedRoute>
+            }/>
         </Routes>
         {isAuthenticated && <Player />}
       </MainContainer>

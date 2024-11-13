@@ -12,7 +12,7 @@ const corsOptions = {
     origin: 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials:true
+    credentials: true
 };
 app.use(cors(corsOptions));
 
@@ -28,21 +28,22 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 
 //Set Up Sessions
 app.use(session({
-    secret:process.env.SESSION_SECRET,
-    resave:false,
-    saveUninitialized:false,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.DATABASE_URL,
-        collectionName:"SessionStore"
-    }), 
-    
-    cookie:{
+        collectionName: "SessionStore"
+    }),
+
+    cookie: {
         secure: false,
-        httpOnly:true,
+        httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24,
-        name:'SpotCookie'
+        sameSite: 'lax', 
+        name: 'SpotCookie',
     }
-    
+
 }))
 
 
@@ -57,7 +58,7 @@ const morgan = require('morgan')
 app.use(morgan('dev'));
 
 //Defining base route
-const routes= require("./src/routes")
+const routes = require("./src/routes")
 app.use('/api', routes);
 
 //Connect to MongoDB
@@ -79,8 +80,8 @@ app.use(express.static(path.join(__dirname, 'public', "dist")));
 // });
 
 //Finally have the server listen on the defined port. Nice!
-app.listen(PORT, ()=>{
-    console.log( `Server running on port ${PORT}`)
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })
 
 

@@ -25,7 +25,7 @@ export default function NavBar (){
 
     return(
         <Container>
-            <TopContainers><Avatar></Avatar></TopContainers>
+            <TopContainers><Avatar to={"/profile"}></Avatar></TopContainers>
             <TopContainers>
                 <LinkText to={"/home/zeke"}>Home</LinkText>
                 <LinkText to={"/search"}>Search</LinkText>
@@ -100,7 +100,7 @@ const TopContainers = styled.div`
         height:10%;
     }
 `
-const Avatar = styled.div`
+const Avatar = styled(Link)`
 background-image: url(${pic});
 background-position: center;
 background-repeat: no-repeat;

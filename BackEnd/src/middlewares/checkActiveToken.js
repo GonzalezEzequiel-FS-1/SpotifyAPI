@@ -10,7 +10,8 @@ if (!TOKEN_URL || !CLIENT_ID || !CLIENT_SECRET) {
 }
 
 const checkActiveToken = async (req, res, next) => {
-    const {user} = req.body;
+    console.log("==>>>>>>>>>>>>> TOKEN REFRESHER STARTED <<<<<<<<<<<<<< <===")
+    const user = req.session.user.user_name;
     console.log(user)
     if (!user) {
         console.log("Checking user")

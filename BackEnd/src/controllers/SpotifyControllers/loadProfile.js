@@ -3,8 +3,10 @@ const axios = require('axios');
 const getToken = require('../../utils/getToken');
 
 const loadProfile = async (req, res) => {
-    const { user } = req.session.user;
-console.log(user)
+    
+    const  user  = req.session.user//.user_name;
+    console.log(user)
+
     const tokenResult = await getToken(user);
 
     if (!tokenResult.success) {
@@ -26,7 +28,6 @@ console.log(user)
             profile: userProfile.data
         });
     } catch (error) {
-        console.error('Error loading profile:', error.response ? error.response.data : error.message);
         return res.status(500).json({
             success: false,
             message: 'Error loading profile'

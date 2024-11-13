@@ -52,11 +52,11 @@ router.get("/callback", callback);
 //Session Routes
 router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
-router.get('/profile', destroySession)
+
+router.get('/profile', checkActiveToken, loadProfile)
 
 
 router.post('/token/check', checkActiveToken)
-
 
 router.get('/search', searchSpoti)
 module.exports = router;
