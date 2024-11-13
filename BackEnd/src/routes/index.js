@@ -25,6 +25,7 @@ const destroySession = require('../controllers/SessionTesting/destroySession');
 const  redirectToSpotifyAuth  = require("../controllers/SpotifyControllers/Redirect");
 const  callback  = require("../controllers/SpotifyControllers/Callback");
 const checkActiveToken = require("../middlewares/checkActiveToken");
+const searchSpoti = require("../controllers/SpotifyControllers/searchSpoti");
 
 
 //User CRUD Routes
@@ -56,4 +57,6 @@ router.get('/profile', destroySession)
 
 router.post('/token/check', checkActiveToken)
 
+
+router.get('/search', searchSpoti)
 module.exports = router;

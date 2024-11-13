@@ -1,13 +1,12 @@
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import propTypes from 'prop-types';
-import styled from 'styled-components';
 
 export default function MUISearchField({label, onChange, type, value }) {
   return (
     <Box
       component="form"
-      sx={{ width: '100%', '& .MuiTextField-root': {color:"white", m: 1, width: '80%',  '& fieldset': {
+      sx={{ '& .MuiTextField-root': {width:'100%',color:"white",'& fieldset': {
             borderColor: '#555555',
           },
           '&:hover fieldset': {
@@ -28,8 +27,8 @@ export default function MUISearchField({label, onChange, type, value }) {
       noValidate
       autoComplete="off"
     >
-      <Container>
-        <TextField
+   
+        <TextField sx={{height:'10rem'}}
           required
           id="standard-search"
           label={label}
@@ -40,7 +39,7 @@ export default function MUISearchField({label, onChange, type, value }) {
         />
         
     
-      </Container>
+      
     </Box>
   );
 }
@@ -51,8 +50,3 @@ MUISearchField.propTypes = {
     type: propTypes.string,
     value: propTypes.string
 }
-const Container = styled.div`
-width: 100%;
-display: flex;
-justify-content:center;
-`

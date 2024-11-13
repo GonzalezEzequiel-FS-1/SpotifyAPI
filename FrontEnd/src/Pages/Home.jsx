@@ -1,54 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import SubmitBtn from "../Components/Buttons/SubmitBtn";
-import axios from "axios";
-import { useAuth } from "../context/AuthContext";
+//import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import ArtistCard from "../Components/cards/ArtistCard";
-import { useState } from "react";
-import MUIBtn from "../Components/Buttons/MUIBtn";
-import Player from '../Components/Player'
+
 
 const Home = () => {
 
-  const { user } = useParams();
-  const { logout } = useAuth();
-  const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
 
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get("http://localhost:3069/api/signout");
-      if (response.status === 200) {
-        logout();
-        console.log(`User Signed off successfully`);
-        localStorage.clear();
-        navigate("/signin");
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
 
-  const handleGetProfile = async (e) => {
-    e.preventDefault()
-    //console.log(user);
-    setLoading(true);
-    try {
-      await axios.post(`http://localhost:3069/api/token/check`, {
-        user: user
-      }, {
-        withCredentials: true
-      });
-      //console.log(response.data.data.accessToken);
-      // Handle the response data here, e.g., store it in a state
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+
+
 
   // useEffect(() => {
   //   if (user) {
@@ -86,20 +48,20 @@ const Container = styled.div`
 const TopContainer = styled.div`
         height:40%;
         `
-const Title = styled.h3`
-        font-family: "Catamaran", "Sans Serif";
-        letter-spacing: 0.10rem;
-        text-transform: capitalize;
-        text-align: left;
-        `;
+// const Title = styled.h3`
+//         font-family: "Catamaran", "Sans Serif";
+//         letter-spacing: 0.10rem;
+//         text-transform: capitalize;
+//         text-align: left;
+//         `;
 
-const SubTitle = styled.p`
-        font-family: Sintony;
-        font-size: 1rem;
-        line-height: 10%;
-        color: #121212;
-        font-weight: 600;
-        `;
+// const SubTitle = styled.p`
+//         font-family: Sintony;
+//         font-size: 1rem;
+//         line-height: 10%;
+//         color: #121212;
+//         font-weight: 600;
+//         `;
 
 const BottomRight = styled.div`
   background-color: orange;
