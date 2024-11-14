@@ -3,6 +3,7 @@ const express = require('express');
 const session = require("express-session")
 const MongoStore = require("connect-mongo")
 const app = express();
+const cookieParser = require('cookie-parser')
 const path = require('path')
 //Loading Mongoose Yay! I'm a MERN Dev...
 const mongoose = require('mongoose');
@@ -16,6 +17,8 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+//Load Cookie Parser
+app.use(cookieParser())
 //Load DotEnv and the current variables
 const dotEnv = require("dotenv")
 dotEnv.config()

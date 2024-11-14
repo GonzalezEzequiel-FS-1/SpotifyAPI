@@ -17,7 +17,9 @@ const Home = () => {
         <BottomRight>
         </BottomRight>
         <BottomLeft>
+        <Mask>
           <Categories />
+          </Mask>
         </BottomLeft>
       </BottomFull>
     </Container>
@@ -42,15 +44,23 @@ const TopContainer = styled.div`
 `;
 
 const BottomRight = styled.div`
-  background-color: orange;
   width: 40vw;
   height: 100%;
   
 `;
+const Mask = styled.div`
+  width: 60vw;
+  overflow: auto;
+  height: 100%;
+  mask-image: linear-gradient(90deg, #00000000, #000000 10%, #000000 80%, #00000000);
+  -webkit-mask-image: linear-gradient(90deg, #00000000, #000000 10%, #000000 80%, #00000000);
+
+`
 
 const BottomLeft = styled.div`
   width: 60vw;
   overflow: scroll;
+
 `;
 
 const BottomFull = styled.div`
@@ -60,5 +70,5 @@ const BottomFull = styled.div`
   height: 50%;
   position: absolute;
   bottom: 0;
-  background-color: red;
+
 `;
