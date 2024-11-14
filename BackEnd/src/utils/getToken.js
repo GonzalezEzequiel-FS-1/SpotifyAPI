@@ -1,9 +1,11 @@
 const User = require('../models/User');
 
 const getToken = async (user) => {
-    console.log('==> Entered getToken function with user:', user);
+    const userName = user.user_name
+    console.log(`Formatted ${JSON.stringify(user)} to ${userName}`)
+    console.log('==> Entered getToken function with user:', userName);
 
-    if (!user) {
+    if (!userName) {
         console.log('No user provided in session');
         return {
             success: false,
@@ -12,8 +14,8 @@ const getToken = async (user) => {
     }
 
     try {
-        console.log(`==> Searching for user in database: ${user}`);
-        const userData = await User.findOne({ user_name: user });
+        console.log(`==> Searching for user in database: ${userName}`);
+        const userData = await User.findOne({ user_name: userName });
         console.log('Database Query Result:', userData);
 
         if (!userData) {
@@ -43,7 +45,7 @@ const getToken = async (user) => {
 
     } catch (error) {
         console.log('==> Entering Error checks')
-        if(error.response.status === 401 ){
+        if(error.response === 401 ){
             console.log('EXPIRED TOKEN')
         }
         console.error('Error fetching user token:', error.message);
