@@ -11,7 +11,10 @@ const modifyUser = require('../controllers/UserControllers/modifyUser');
 const getOneUser = require('../controllers/UserControllers/getOneUser');
 const getAllUsers = require('../controllers/UserControllers/getAllUsers');
 const deleteUser = require('../controllers/UserControllers/deleteUser');
+
+//Spotify API integration:
 const loadProfile = require('../controllers/SpotifyControllers/loadProfile')
+const loadCategories = require('../controllers/SpotifyControllers/loadCategories')
 
 //Refreshing Tokens manually
 //const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
@@ -59,4 +62,6 @@ router.get('/profile', checkActiveToken, loadProfile)
 router.post('/token/check', checkActiveToken)
 
 router.get('/search', searchSpoti)
+
+router.get('/categories', checkActiveToken, loadCategories)
 module.exports = router;

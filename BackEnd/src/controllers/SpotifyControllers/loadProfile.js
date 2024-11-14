@@ -4,7 +4,7 @@ const getToken = require('../../utils/getToken');
 
 const loadProfile = async (req, res) => {
     
-    const  user  = req.session.user//.user_name;
+    const  user  = req.session.user;
     console.log(user)
 
     const tokenResult = await getToken(user);
