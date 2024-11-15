@@ -45,16 +45,30 @@ console.log(accessToken)
         console.log('Link received, processing request');
 
 
-        const response = await axios.get(catLink, {
+        const response = await axios.get(`${catLink}/playlists`, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         });
+        const playlists = response.data.playlists.items
+        playlists.forEach(playlist => {
+            const name = playlist.name;
+            const url= playlist.external_urls.spotify;
+            const description = playlist.description;
+            const totalTracks = playlist.tracks.total
+            const coverArtURL = playlist.images[0]?.url || 'No Image Available';
+        
 
-        console.log(`Request completed, retrieved Data: ${JSON.stringify(response.data)}`);
+        console.log(`Name: ${name}`);
+        console.log(`URL: ${url}`);
+        console.log(`Description: ${description}`);
+        console.log(`Total Tracks: ${totalTracks}`);
+        console.log(`Cover art: ${coverArtURL}`)
+        console.log('---');
+    });
         res.status(200).json({
             success: true,
-            data: response.data
+            data: playlists
         });
     } catch (err) {
         console.log('Error:', err);

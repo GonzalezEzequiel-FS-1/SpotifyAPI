@@ -112,7 +112,7 @@ const CardContainer = styled.div`
     border:3px solid #555555;
     &:hover{
         transform: scale(1.1);
-        translateY(-.5rem);
+        top:.15rem;
         border:0px solid #00000000;
     }
 `;
