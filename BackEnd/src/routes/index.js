@@ -16,6 +16,7 @@ const deleteUser = require('../controllers/UserControllers/deleteUser');
 const loadProfile = require('../controllers/SpotifyControllers/loadProfile')
 const loadCategories = require('../controllers/SpotifyControllers/loadCategories')
 const singleCategory = require('../controllers/SpotifyControllers/singleCategory')
+const loadPlaylists = require('../controllers/SpotifyControllers/loadPlaylists')
 
 //Refreshing Tokens manually
 //const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
@@ -66,4 +67,5 @@ router.get('/search', searchSpoti)
 
 router.get('/categories', checkActiveToken, loadCategories)
 router.post('/categories', checkActiveToken, singleCategory)
+router.post("/categories/playlists", checkActiveToken, loadPlaylists)
 module.exports = router;

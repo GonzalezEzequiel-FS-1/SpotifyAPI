@@ -59,6 +59,7 @@ const checkActiveToken = async (req, res, next) => {
         console.log("Profile retrieved")
         if (response.status === 200) {
             req.active_token = true;
+            req.user = user; // Attach user to req object
             return next();
         }
 
@@ -104,6 +105,8 @@ const checkActiveToken = async (req, res, next) => {
 
                 console.log(`Access Token for user: ${user} updated to ${newToken}, New Data : ${updatedUserData}`);
                 req.active_token = true;
+                req.user = user;
+                req.newToken = newToken;
                 return next();  
 
             } catch (refreshError) {

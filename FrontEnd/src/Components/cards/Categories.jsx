@@ -2,47 +2,61 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import CircularIndeterminate from "../Progress/CircularProgress";
+import PropTypes from "prop-types";
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
-    const [singleCategory, setSingleCategory] = useState([]);
+    const [playlists, setPlaylists] = useState([]);
+    const [tracks, setTracks] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [showSingle, setShowSingle] = useState(false);
+    const [displayedData, setDisplayedData] = useState("category");
+    const [currentItem, setCurrentItem] = useState({});
 
-    // Function to get the categories Data
     const handleCategories = async () => {
         setLoading(true);
         try {
             const response = await axios.get('http://localhost:3069/api/categories', { withCredentials: true });
             const categoriesData = response.data.data;
-            setCategories(categoriesData);
+            categoriesData ? setCategories(categoriesData) : console.log('Categories not found');
         } catch (err) {
-            setError(err.message);  // use err.message for a cleaner error message
+            setError(err.message);
         } finally {
             setLoading(false);
         }
     };
 
-    // Handle category link click
-    const handleCatLink = async (catLink) => {
-        setLoading(true);
-        setError(null);
+    const handlePlaylists = async (catId) => {
         try {
-            const response = await axios.post('http://localhost:3069/api/categories', { catLink }, { withCredentials: true });
-            const singleCatData = response.data;
-            setSingleCategory(singleCatData);
-            setShowSingle(true); 
-        } catch (err) {
-            setError(err.message); 
-        } finally {
-            setLoading(false);
+            const response = await axios.post(`http://localhost:3069/api/categories/playlists/`, { catId }, { withCredentials: true });
+            if (response) {
+                const playlistData = response.data.data.items;
+                console.log(`RESPONSE DATA ====>>${JSON.stringify(playlistData)}`);
+                setPlaylists(playlistData);  // Set the playlists correctly
+                setDisplayedData("playlist");
+                setCurrentItem(response.data);
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    const handleTracks = async (playlistId) => {
+        try {
+            const response = await axios.post("http://localhost:3069/api/playlists/tracks", { playlistId }, { withCredentials: true });
+            if (response) {
+                setTracks(response.data);
+                setDisplayedData("track");
+                setCurrentItem(response.data);
+            }
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
     useEffect(() => {
         handleCategories();
-    }, []);
+    }, [displayedData]);
 
     return loading ? (
         <MainContainer>
@@ -54,36 +68,76 @@ export default function Categories() {
         <h1>No Categories Available</h1>
     ) : (
         <MainContainer>
-            {showSingle ? (
-                <SingleCategoryView singleCategory={singleCategory} />
+            {displayedData === "category" ? (
+                categories.map((category) => (
+                    
+                    <SingleCategory
+                        key={category.id}
+                        array={category}
+                        title={category.name}
+                        icon={category.icons}
+                        id={category.id}
+                        onClick={() => handlePlaylists(category.id)}
+                    />
+                ))
+            ) : displayedData === "playlist" ? (
+                playlists.length > 0 ? (
+                    playlists.map((playlist) => (
+                        <CardContainer key={playlist.id} onClick={() => handleTracks(playlist.id)}>
+                            <Title>{playlist.name}</Title>
+                            <Thumbnail 
+                                src={playlist.images[0]?.url || 'default-image-url'} 
+                                alt={playlist.name} 
+                                width={100} 
+                                height={100} 
+                            />
+                            {/* <p>{playlist.description}</p> */}
+                        </CardContainer>
+                    ))
+                ) : (
+                    <h2>No Playlists Available</h2>
+                )
             ) : (
-                categories.map((category, index) => (
-                    <CardContainer key={index}>
-                        <Title>{category.name}</Title>
-                        <Thumbnail
-                            src={category.icons[0]?.url || ''}
-                            width={100}
-                            height={100}
-                            alt={category.name}
-                            onClick={() => handleCatLink(category.href)}
-                        />
-                    </CardContainer>
+                tracks.map((track) => (
+                    <SingleCategory
+                        key={track.id}
+                        array={track}
+                        title={track.name}
+                        icon={track.icons}
+                        id={track.id}
+                    />
                 ))
             )}
         </MainContainer>
     );
 }
 
-// Separate Single Category View (if you want to render it differently)
-function SingleCategoryView() {
+Categories.propTypes = {
+    setCount: PropTypes.func.isRequired,
+};
+
+function SingleCategory({ title, icon, id, onClick }) {
     return (
-        <div>
-            {/* <h1>{singleCategory.name}</h1>
-            <p>{singleCategory.description}</p> */}
-            {/* Add more details about the category if necessary */}
-        </div>
+        <CardContainer onClick={onClick}>
+            <Title>{title}</Title>
+            <Thumbnail
+                src={icon[0]?.url || ''}
+                width={100}
+                height={100}
+                alt={title}
+                id={id}
+            />
+        </CardContainer>
     );
 }
+
+SingleCategory.propTypes = {
+    array: PropTypes.object.isRequired,
+    title: PropTypes.string.isRequired,
+    icon: PropTypes.array.isRequired,
+    id: PropTypes.string.isRequired,
+    onClick: PropTypes.func.isRequired,
+};
 
 const MainContainer = styled.div`
     display: grid;
@@ -94,26 +148,27 @@ const MainContainer = styled.div`
     padding: 1rem;
     width: 100%;
 `;
-
+const SectionTitle = styled.h2`
+`
 const CardContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color:#55555590;
+    background-color: #55555590;
     gap: 0.5rem;
     padding: .5rem;
-    width: 10rem;  
+    width: 10rem;
     height: 10rem;
     position:relative;
     border-radius: 20px;
     box-shadow: 5px 5px 20px black;
     transition: all .25s ease-in-out;
     border:3px solid #555555;
-    &:hover{
+    &:hover {
         transform: scale(1.1);
-        top:.15rem;
-        border:0px solid #00000000;
+        top: .15rem;
+        border: 0px solid #00000000;
     }
 `;
 
@@ -121,16 +176,16 @@ const Title = styled.p`
     font-family: "Roboto";
     line-height: 85%;
     font-weight: 800;
-    color:white;
+    color: white;
     letter-spacing: .25rem;
     text-align: center;
-    position:absolute;
+    position: absolute;
     top: .5rem;
     text-decoration: none;
     max-width: 80%;
     transition: all .15s ease-in-out;
-    &:hover{
-        color:#FF000050;
+    &:hover {
+        color: #FF000050;
     }
 `;
 
@@ -139,28 +194,27 @@ const Thumbnail = styled.img`
     height: auto;
     max-height: 100px;
     object-fit: cover;
-    position:absolute;
+    position: absolute;
     bottom: 0.75rem;
-    cursor:pointer;
+    cursor: pointer;
     transition: all .25s ease-in-out;
     border-radius: 20px;
     box-shadow: 5px 5px 15px black;
-    &:hover{
+    &:hover {
         filter: blur(4px);
         transform: scale(.99);
     }
 `;
 
 const ErrorMessage = styled.p`
-    color:red;
+    color: red;
     font-family: "Roboto";
-    font-size:1rem;
+    font-size: 1rem;
 `;
 
 const Loading = styled(CircularIndeterminate)`
-    position:relative;
-    top:50%;
-    left:50%;
-    z-index:10;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
 `;
-

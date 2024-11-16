@@ -2,8 +2,8 @@ const User = require('../models/User');
 
 const getToken = async (user) => {
     const userName = user.user_name
-    //console.log(`Formatted ${JSON.stringify(user)} to ${userName}`)
-    //console.log('==> Entered getToken function with user:', userName);
+    console.log(`Formatted ${JSON.stringify(user)} to ${userName}`)
+    console.log('==> Entered getToken function with user:', userName);
 
     if (!userName) {
         //console.log('No user provided in session');

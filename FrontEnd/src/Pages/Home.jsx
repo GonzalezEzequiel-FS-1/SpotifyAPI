@@ -1,13 +1,32 @@
 import styled from "styled-components";
 //import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import Categories from "../Components/cards/Categories";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
+  const [count, setCount] = useState(0)
 
+  const handleNext = (e) => {
+    e.preventDefault()
+    setCount(count + 1)
+    console.log(count)
+    if (count >= 2) {
+      setCount(0)
+    }
+  }
+
+  const handleBack = (e) => {
+    e.preventDefault()
+    setCount(count - 1)
+    console.log(count)
+    if (count <= 0) {
+      setCount(2)
+    }
+  }
   useEffect(() => {
-    // Optional: Add any logic if needed on component mount
-  }, []);
+
+
+  }, [count]);
 
   return (
     <Container>
@@ -17,14 +36,37 @@ const Home = () => {
         <BottomRight>
         </BottomRight>
         <BottomLeft>
-        <Mask>
-          <Categories />
+          
+          <Mask>
+            {count === 0 ? (
+              
+              <Categories setCount={setCount} />
+            ) : count === 1 ? (
+              <><button onClick={handleNext}>NEXT</button>
+              <button onClick={handleBack}>BACK</button>
+              {/* <Playlists /> */
+                console.log("Playlist")
+              }
+              </>
+
+            ) : count === 2 ? (
+              <>
+              {/* <Tracks /> */
+                console.log('Tracks')
+              }
+              <button onClick={handleBack}>BACK</button>
+              </>
+            ) : null}
+
+
           </Mask>
         </BottomLeft>
       </BottomFull>
     </Container>
   );
 };
+
+
 
 export default Home;
 
