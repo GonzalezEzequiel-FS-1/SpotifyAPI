@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import CircularIndeterminate from "../Progress/CircularProgress";
 import PropTypes from "prop-types";
+import colorThief from 'colorthief'
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
@@ -12,6 +13,7 @@ export default function Categories() {
     const [loading, setLoading] = useState(false);
     const [displayedData, setDisplayedData] = useState("category");
     const [currentItem, setCurrentItem] = useState({});
+    const [bgColor, setBGColor] = useState("#5555550")
 
     const handleCategories = async () => {
         setLoading(true);
@@ -32,7 +34,7 @@ export default function Categories() {
             if (response) {
                 const playlistData = response.data.data.items;
                 console.log(`RESPONSE DATA ====>>${JSON.stringify(playlistData)}`);
-                setPlaylists(playlistData);  // Set the playlists correctly
+                setPlaylists(playlistData);
                 setDisplayedData("playlist");
                 setCurrentItem(response.data);
             }
@@ -43,9 +45,13 @@ export default function Categories() {
 
     const handleTracks = async (playlistId) => {
         try {
-            const response = await axios.post("http://localhost:3069/api/playlists/tracks", { playlistId }, { withCredentials: true });
+            console.log('Starting Set Tracks')
+            const response = await axios.post("http://localhost:3069/api/categories/playlists/tracks", { playlistId }, { withCredentials: true });
             if (response) {
-                setTracks(response.data);
+
+                const tracksData = response.data.data.items;
+                console.log(tracksData)
+                setTracks(tracksData);
                 setDisplayedData("track");
                 setCurrentItem(response.data);
             }
@@ -53,9 +59,15 @@ export default function Categories() {
             console.error(error.message);
         }
     };
+    const handleImageClick = async (trackId) =>{
+        console.log(`Image Clicked ID: ${trackId}`)
+    }
+    
+
 
     useEffect(() => {
         handleCategories();
+    
     }, [displayedData]);
 
     return loading ? (
@@ -70,7 +82,7 @@ export default function Categories() {
         <MainContainer>
             {displayedData === "category" ? (
                 categories.map((category) => (
-                    
+
                     <SingleCategory
                         key={category.id}
                         array={category}
@@ -85,11 +97,12 @@ export default function Categories() {
                     playlists.map((playlist) => (
                         <CardContainer key={playlist.id} onClick={() => handleTracks(playlist.id)}>
                             <Title>{playlist.name}</Title>
-                            <Thumbnail 
-                                src={playlist.images[0]?.url || 'default-image-url'} 
-                                alt={playlist.name} 
-                                width={100} 
-                                height={100} 
+                            <Thumbnail
+                                src={playlist.images[0]?.url || 'default-image-url'}
+                                alt={playlist.name}
+                                width={100}
+                                height={100}
+
                             />
                             {/* <p>{playlist.description}</p> */}
                         </CardContainer>
@@ -98,15 +111,28 @@ export default function Categories() {
                     <h2>No Playlists Available</h2>
                 )
             ) : (
-                tracks.map((track) => (
-                    <SingleCategory
-                        key={track.id}
-                        array={track}
-                        title={track.name}
-                        icon={track.icons}
-                        id={track.id}
-                    />
-                ))
+                tracks.map((trackItem) => {
+                    const track = trackItem.track;
+                    const albumImage = track.album.images[0]?.url; 
+
+                    return (
+                        <CardContainer key={track.id}>
+                            {albumImage && <Thumbnail src={albumImage} alt={track.name}  onClick={() =>  handleImageClick(track.id) } />}
+                            <Title>{track.name}</Title>
+                            <ArtistName>
+                                {track.artists.map((artist) => artist.name).join(", ")}
+                            </ArtistName>
+                            <AlbumName>{track.album.name}</AlbumName>
+                            {track.preview_url && (
+                                <AudioPlayer controls>
+                                    <source src={track.preview_url} type="audio/mpeg" />
+                                    Your browser does not support the audio element.
+                                </AudioPlayer>
+                            )}
+                        </CardContainer>
+                    );
+                })
+
             )}
         </MainContainer>
     );
@@ -141,25 +167,29 @@ SingleCategory.propTypes = {
 
 const MainContainer = styled.div`
     display: grid;
-    grid-template-rows: repeat(2, 1fr); 
+    grid-template-rows: repeat(1, 1fr); 
     grid-auto-flow: column; 
+    align-items: center;
     gap: 2rem;
     overflow-x: auto; 
     padding: 1rem;
     width: 100%;
+    height:100%;
 `;
-const SectionTitle = styled.h2`
-`
+
 const CardContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     background-color: #55555590;
     gap: 0.5rem;
-    padding: .5rem;
-    width: 10rem;
-    height: 10rem;
+    margin-left: 2rem;
+ 
+    width: 20rem;
+    height: 90%;
+    padding: 1rem;
+    
     position:relative;
     border-radius: 20px;
     box-shadow: 5px 5px 20px black;
@@ -175,11 +205,11 @@ const CardContainer = styled.div`
 const Title = styled.p`
     font-family: "Roboto";
     line-height: 85%;
+    font-size: 2rem;
     font-weight: 800;
     color: white;
     letter-spacing: .25rem;
     text-align: center;
-    position: absolute;
     top: .5rem;
     text-decoration: none;
     max-width: 80%;
@@ -190,19 +220,17 @@ const Title = styled.p`
 `;
 
 const Thumbnail = styled.img`
-    width: 100px;
+    width: 100%;
     height: auto;
-    max-height: 100px;
     object-fit: cover;
-    position: absolute;
-    bottom: 0.75rem;
-    cursor: pointer;
-    transition: all .25s ease-in-out;
+    transition: transform 0.3s, filter 0.3s;
     border-radius: 20px;
     box-shadow: 5px 5px 15px black;
+    cursor: pointer;
     &:hover {
-        filter: blur(4px);
-        transform: scale(.99);
+        filter: brightness(0.8)
+        blur(2px);
+        transform: scale(1.05);
     }
 `;
 
@@ -218,3 +246,24 @@ const Loading = styled(CircularIndeterminate)`
     left: 50%;
     z-index: 10;
 `;
+
+const ArtistName = styled.p`
+    font-size: 0.85rem;
+    color: #ddd;
+    text-align: center;
+`;
+
+const AlbumName = styled.p`
+    font-size: 0.75rem;
+    color: #aaa;
+    text-align: center;
+`;
+
+const AudioPlayer = styled.audio`
+    width: 100%;
+    border-radius: 20px;
+    margin-top: 0.5rem;
+    background-color: white;
+    box-shadow: 5px 5px 5px 1px #22222290;
+`;
+

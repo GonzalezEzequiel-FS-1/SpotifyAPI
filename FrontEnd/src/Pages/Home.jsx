@@ -101,15 +101,17 @@ const Mask = styled.div`
 
 const BottomLeft = styled.div`
   width: 60vw;
-  overflow: scroll;
-
+  height:100%;
+  display: flex;
+  justify-content:flex-end;
 `;
 
 const BottomFull = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   width: 100%;
-  height: 50%;
+  height: 40%;
   position: absolute;
   bottom: 0;
 
