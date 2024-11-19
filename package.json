@@ -1,0 +1,22 @@
+{
+    "name": "spotNet",
+    "version": "1.0.0",
+    "engines": {
+      "node": "18.20.4"
+    },
+    "scripts": {
+      "install-vite": "npm install --prefix vite",
+      "install-api": "npm install --prefix api",
+      "build-vite": "npm run build --prefix vite",
+      "build-api": "npm run build --prefix api",
+      "heroku-postbuild": "npm run install-vite && npm run install-api && npm run build-vite",
+      "start": "npm start --prefix api",
+      "dev": "concurrently --raw \"npm run api\" \"npm run vite\"",
+      "vite": "cd vite && npm run dev",
+      "api": "cd api && npm start"
+    },
+    "dependencies": {
+      "concurrently": "^6.0.0",
+      "prop-types": "^15.8.1"
+    }
+  }

@@ -11,7 +11,13 @@ const modifyUser = require('../controllers/UserControllers/modifyUser');
 const getOneUser = require('../controllers/UserControllers/getOneUser');
 const getAllUsers = require('../controllers/UserControllers/getAllUsers');
 const deleteUser = require('../controllers/UserControllers/deleteUser');
+
+//Spotify API integration:
 const loadProfile = require('../controllers/SpotifyControllers/loadProfile')
+const loadCategories = require('../controllers/SpotifyControllers/loadCategories')
+const singleCategory = require('../controllers/SpotifyControllers/singleCategory')
+const loadPlaylists = require('../controllers/SpotifyControllers/loadPlaylists')
+const loadTracks = require('../controllers/SpotifyControllers/loadTracks')
 
 //Refreshing Tokens manually
 //const tokenRefresher = require('../controllers/SpotifyControllers/tokenRefresher')
@@ -25,6 +31,7 @@ const destroySession = require('../controllers/SessionTesting/destroySession');
 const  redirectToSpotifyAuth  = require("../controllers/SpotifyControllers/Redirect");
 const  callback  = require("../controllers/SpotifyControllers/Callback");
 const checkActiveToken = require("../middlewares/checkActiveToken");
+const searchSpoti = require("../controllers/SpotifyControllers/searchSpoti");
 
 
 //User CRUD Routes
@@ -51,9 +58,17 @@ router.get("/callback", callback);
 //Session Routes
 router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
-router.get('/profile', destroySession)
 
-//router.post('/token/refresh', tokenRefresher)
-router.get('/token/check', checkActiveToken)
-router.get('/token/check', checkActiveToken)
+router.get('/profile', checkActiveToken, loadProfile)
+
+
+router.post('/token/check', checkActiveToken)
+
+router.get('/search', searchSpoti)
+
+router.get('/categories', checkActiveToken, loadCategories)
+router.post('/categories', checkActiveToken, singleCategory)
+router.post("/categories/playlists", checkActiveToken, loadPlaylists)
+router.post("/categories/playlists/tracks", checkActiveToken, loadTracks)
+router.post('/search/track')
 module.exports = router;

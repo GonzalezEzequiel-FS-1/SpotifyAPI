@@ -1,95 +1,120 @@
-import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import SubmitBtn from "../Components/Buttons/SubmitBtn";
-import axios from "axios";
-import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+//import SubmitBtn from "../Components/Buttons/SubmitBtn";
+import Categories from "../Components/cards/Categories";
+import { useEffect, useState } from "react";
+import AudioPLayer from "../Components/AudioPLayer";
 
 const Home = () => {
-  const { user } = useParams();
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  
-  const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(0)
 
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get("http://localhost:3069/api/signout");
-      if (response.status === 200) {
-        logout();
-        console.log(`User Signed off successfully`);
-        localStorage.clear();
-        navigate("/signin");
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleGetProfile = async (e) => {
+  const handleNext = (e) => {
     e.preventDefault()
-    //console.log(user);
-    setLoading(true);
-    try {
-      await axios.get(`http://localhost:3069/api/profile`,{
-        user:user
-      },{
-        withCredentials: true
-    });
-      //console.log(response.data.data.accessToken);
-      // Handle the response data here, e.g., store it in a state
-    } catch (error) {
-      console.log(error.message);
-    } finally {
-      setLoading(false);
+    setCount(count + 1)
+    console.log(count)
+    if (count >= 2) {
+      setCount(0)
     }
-  };
+  }
 
-  // useEffect(() => {
-  //   if (user) {
-  //     localStorage.setItem("user_name", user);
-  //   }
-  // }, [user]);
+  const handleBack = (e) => {
+    e.preventDefault()
+    setCount(count - 1)
+    console.log(count)
+    if (count <= 0) {
+      setCount(2)
+    }
+  }
+  useEffect(() => {
+
+
+  }, [count]);
 
   return (
     <Container>
-      <Title>Welcome {user}</Title>
-      <SubTitle>GET YOUR PROFILE</SubTitle>
-      <SubmitBtn onClick={handleGetProfile} text="Get Profile" />
-      {loading && <p>Loading...</p>} {/* Show loading indicator */}
-      <SubmitBtn onClick={handleLogout} text={"Log Out"} />
+      <TopContainer>
+      <AudioPLayer />
+      </TopContainer>
+      <BottomFull>
+        <BottomRight>
+        </BottomRight>
+        <BottomLeft>
+          
+          <Mask>
+            {count === 0 ? (
+              
+              <Categories setCount={setCount} />
+            ) : count === 1 ? (
+              <><button onClick={handleNext}>NEXT</button>
+              <button onClick={handleBack}>BACK</button>
+              {/* <Playlists /> */
+                console.log("Playlist")
+              }
+              </>
+
+            ) : count === 2 ? (
+              <>
+              {/* <Tracks /> */
+                console.log('Tracks')
+              }
+              <button onClick={handleBack}>BACK</button>
+              </>
+            ) : null}
+
+
+          </Mask>
+        </BottomLeft>
+      </BottomFull>
     </Container>
   );
 };
 
+
+
 export default Home;
 
-const Container = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #fff;
-  border: 1px solid #99999950;
-  border-radius: 10px;
   box-shadow: 0px 0px 15px 10px #0a122a;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
-  max-width: 28rem;
+  width: 100vw;
+  height: 100vh;
   padding: 2rem;
 `;
 
-const Title = styled.h3`
-  font-family: "Catamaran", "Sans Serif";
-  letter-spacing: 0.10rem;
-  text-transform: capitalize;
-  text-align: left;
+const TopContainer = styled.div`
+  height: 40%;
 `;
 
-const SubTitle = styled.p`
-  font-family: Sintony;
-  font-size: 1rem;
-  line-height: 10%;
-  color: #121212;
-  font-weight: 600;
+const BottomRight = styled.div`
+  width: 40vw;
+  height: 100%;
+  
+`;
+const Mask = styled.div`
+  width: 60vw;
+  overflow: auto;
+  height: 100%;
+  mask-image: linear-gradient(90deg, #00000000, #000000 10%, #000000 80%, #00000000);
+  -webkit-mask-image: linear-gradient(90deg, #00000000, #000000 10%, #000000 80%, #00000000);
+
+`
+
+const BottomLeft = styled.div`
+  width: 60vw;
+  height:100%;
+  display: flex;
+  justify-content:flex-end;
+`;
+
+const BottomFull = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 40%;
+  position: absolute;
+  bottom: 0;
+
 `;

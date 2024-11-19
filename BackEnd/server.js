@@ -3,7 +3,8 @@ const express = require('express');
 const session = require("express-session")
 const MongoStore = require("connect-mongo")
 const app = express();
-
+const cookieParser = require('cookie-parser')
+const path = require('path')
 //Loading Mongoose Yay! I'm a MERN Dev...
 const mongoose = require('mongoose');
 //Load CORS to have less headaches...
@@ -12,10 +13,12 @@ const corsOptions = {
     origin: 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials:true
+    credentials: true
 };
 app.use(cors(corsOptions));
 
+//Load Cookie Parser
+app.use(cookieParser())
 //Load DotEnv and the current variables
 const dotEnv = require("dotenv")
 dotEnv.config()
@@ -28,21 +31,22 @@ if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) {
 
 //Set Up Sessions
 app.use(session({
-    secret:process.env.SESSION_SECRET,
-    resave:false,
-    saveUninitialized:false,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.DATABASE_URL,
-        collectionName:"SessionStore"
-    }), 
-    
-    cookie:{
+        collectionName: "SessionStore"
+    }),
+
+    cookie: {
         secure: false,
-        httpOnly:true,
+        httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24,
-        name:'SpotCookie'
+        sameSite: 'lax', 
+        name: 'SpotCookie',
     }
-    
+
 }))
 
 
@@ -57,7 +61,7 @@ const morgan = require('morgan')
 app.use(morgan('dev'));
 
 //Defining base route
-const routes= require("./src/routes")
+const routes = require("./src/routes")
 app.use('/api', routes);
 
 //Connect to MongoDB
@@ -71,9 +75,16 @@ db.once('open', () => {
     console.log('Database Connected');
 });
 
+app.use(express.static(path.join(__dirname, 'public', "dist")));
+
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'public', "dist", 'index.html'));
+// });
+
 //Finally have the server listen on the defined port. Nice!
-app.listen(PORT, ()=>{
-    console.log( `Server running on port ${PORT}`)
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
 })
 
 

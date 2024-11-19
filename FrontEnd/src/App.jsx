@@ -7,37 +7,64 @@ import NavBar from './Components/NavBar'
 import styled from 'styled-components'
 import SpotiLoad from './Pages/SpotiLoad'
 import ProtectedRoute from './Components/ProtectedRoute'
+import { useAuth } from './context/AuthContext'
+import Player from './Components/Player'
+import Search from './Pages/Search'
+import Profile from './Pages/Profile'
 
 export default function App() {
+  //Using isAuthenticated to show or hide the navbar
+  const { isAuthenticated } = useAuth();
+
   return (
-    <Router>
+    <RouterContainer>
       <MainContainer>
-        <NavBar />
+        {isAuthenticated && <NavBar />}
         <Routes>
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/*' element={<FourOhFour />} />
           <Route path='/spotify-login' element={<SpotiLoad />} />
-          <Route
-            path='/home/:user'
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
+          <Route path='/home/:user' element={
+              <ProtectedRoute><Home /></ProtectedRoute>
+            }/>
+          <Route  path='/search'  element={
+              <ProtectedRoute><Search /></ProtectedRoute>
+            }/>
+          <Route  path='/profile'  element={
+              <ProtectedRoute><Profile /></ProtectedRoute>
+            }/>
         </Routes>
+        {isAuthenticated && <Player />}
       </MainContainer>
-    </Router>
-  )
+    </RouterContainer>
+  );
 }
-
-const MainContainer = styled.div`
+const RouterContainer = styled(Router)`
   display:flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  background: linear-gradient(#26222A 90%, #23502D);
+
+
+`
+const MainContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   height:100vh;
   width:100vw;
-`
+  background: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 25%,
+    #1f0c23 40%,
+    #1f0c23 40%,
+    #010101 45%,
+    #010101 60%,
+    #0e1a0c 65%,
+    #0e1a0c 75%,
+    #000 80%
+  );
+`;
+

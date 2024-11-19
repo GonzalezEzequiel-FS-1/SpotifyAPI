@@ -27,7 +27,7 @@ const TextInput = styled.input`
     padding: 0.5rem;
     width:20rem;
     border-radius:5px;
-    border:2px solid  #99999950;
+    border:2px solid  #999999;
     background-color:#00000000;
     font-family:"Palanquin", sans;
     font-weight: 600;

@@ -1,37 +1,69 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import pic from "../assets/pic.png"
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 export default function NavBar (){
+    const navigate=useNavigate();
+    const { logout } = useAuth();
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+          const response = await axios.get("http://localhost:3069/api/signout");
+          if (response.status === 200) {
+            logout();
+            console.log(`User Signed off successfully`);
+            localStorage.clear();
+            navigate("/signin");
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+
+
     return(
         <Container>
-            <TopContainers><LinkText to={"/home"}>LOGO</LinkText></TopContainers>
-            <TopContainers><LinkText to={"/home"}>Search Bar</LinkText></TopContainers>
-            <TopContainers><LinkText to={"/home"}>Nav and Profile</LinkText></TopContainers>
-
+            <TopContainers><Avatar to={"/profile"}></Avatar></TopContainers>
+            <TopContainers>
+                <LinkText to={"/home/zeke"}>Home</LinkText>
+                <LinkText to={"/search"}>Search</LinkText>
+                <LinkText to={"/home/zeke"}>Library</LinkText>
+            </TopContainers>
+            <TopContainers></TopContainers>
+            <TopContainers><LinkText to={"/home"} onClick={handleLogout}>Log Out</LinkText></TopContainers>
         </Container>
     )
 }
 
-const Container = styled.header`
+const Container = styled.nav`
     display:flex;
     align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-around;
     padding:1rem;
-    gap:1rem;
-    width:100%;
-    background-color:#1ed760;
+    gap: 1rem;
+    width:15%;
+    height:100%;
+    position: fixed;
+    z-index: 10;
+    
+    transition: transform, 1s ease-in-out;
+    //background-color:red;
+    background-color:#55555500;
+    filter: blur(10px);
+    transform: translateX(-53vw);
+     &:hover{
+        filter:blur(0);
+        background-color: #22222220;
+        transform: translateX(-47vw);
+    }
 `
-// const Text=styled.h1`
-//     color:#fff;
-//     font-size:1.5rem;
-//     margin:1 1rem;
-//     text-align: center;
-// `
 const LinkText=styled(Link)`
     color:#fff;
     font-size:1.5rem;
     margin:1 1rem;
-    
     text-decoration: none;
     font-family: "Sintony", sans-serif;
     font-weight: 700;
@@ -47,10 +79,34 @@ const LinkText=styled(Link)`
 `
 const TopContainers = styled.div`
     display:flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     width:80%;
-    &:nth-of-type(2){
-        width:40%;
+    height:20%;
+    gap:2rem;
+    padding:1rem;
+
+    &:nth-of-type(1){
+        height:20%;
     }
+    &:nth-of-type(2){
+        height:20%;
+    }
+    &:nth-of-type(3){
+        height:50%;
+        text-align: end;
+    }
+    &:nth-of-type(4){
+        height:10%;
+    }
+`
+const Avatar = styled(Link)`
+background-image: url(${pic});
+background-position: center;
+background-repeat: no-repeat;
+background-size:cover;
+width:80%;
+height:100%;
+
+border-radius: 20px;
 `
