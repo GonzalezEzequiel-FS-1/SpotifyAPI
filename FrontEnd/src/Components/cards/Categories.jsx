@@ -5,6 +5,7 @@ import CircularIndeterminate from "../Progress/CircularProgress";
 import PropTypes from "prop-types";
 import colorThief from 'colorthief'
 
+
 export default function Categories() {
     const [categories, setCategories] = useState([]);
     const [playlists, setPlaylists] = useState([]);
@@ -62,7 +63,13 @@ export default function Categories() {
     const handleImageClick = async (trackId) =>{
         console.log(`Image Clicked ID: ${trackId}`)
     }
-    
+    //Testing Purposes only
+    const handleSearchTrack = async (trackId) => {
+        const response = await axios.post('http://localhost:3069/api/search/track',{ trackId }, {withCredentials:true})
+    }  
+
+
+    /////
 
 
     useEffect(() => {
@@ -117,18 +124,24 @@ export default function Categories() {
 
                     return (
                         <CardContainer key={track.id}>
-                            {albumImage && <Thumbnail src={albumImage} alt={track.name}  onClick={() =>  handleImageClick(track.id) } />}
+                            {albumImage && <Thumbnail src={albumImage} alt={track.name}  onClick={() =>  handleSearchTrack(track.id) } />}
                             <Title>{track.name}</Title>
                             <ArtistName>
                                 {track.artists.map((artist) => artist.name).join(", ")}
                             </ArtistName>
-                            <AlbumName>{track.album.name}</AlbumName>
-                            {track.preview_url && (
+                            <AlbumName>{track.album.name}</AlbumName>{
+                                track.preview_url ?(
+                                    track.preview_url && (
                                 <AudioPlayer controls>
                                     <source src={track.preview_url} type="audio/mpeg" />
                                     Your browser does not support the audio element.
                                 </AudioPlayer>
-                            )}
+                            )
+                                ):(
+                                        <SubTitle>No Preview Available</SubTitle>
+                                )
+                            }
+                            
                         </CardContainer>
                     );
                 })
@@ -187,7 +200,7 @@ const CardContainer = styled.div`
     margin-left: 2rem;
  
     width: 20rem;
-    height: 90%;
+    height: 80%;
     padding: 1rem;
     
     position:relative;
@@ -267,3 +280,8 @@ const AudioPlayer = styled.audio`
     box-shadow: 5px 5px 5px 1px #22222290;
 `;
 
+const SubTitle = styled.p`
+    color:white;
+    font-size:1rem;
+    font-family: "Roboto";
+`

@@ -48,16 +48,16 @@ const Container = styled.nav`
     height:100%;
     position: fixed;
     z-index: 10;
-    left:0;
-    transition: all, 1s ease-in-out;
+    
+    transition: transform, 1s ease-in-out;
     //background-color:red;
     background-color:#55555500;
     filter: blur(10px);
-    transform: translateX(-15.5rem);
+    transform: translateX(-53vw);
      &:hover{
         filter:blur(0);
         background-color: #22222220;
-        transform: translateX(0);
+        transform: translateX(-47vw);
     }
 `
 const LinkText=styled(Link)`

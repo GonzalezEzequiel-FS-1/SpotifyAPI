@@ -2,6 +2,7 @@ import styled from "styled-components";
 //import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import Categories from "../Components/cards/Categories";
 import { useEffect, useState } from "react";
+import AudioPLayer from "../Components/AudioPLayer";
 
 const Home = () => {
   const [count, setCount] = useState(0)
@@ -31,6 +32,7 @@ const Home = () => {
   return (
     <Container>
       <TopContainer>
+      <AudioPLayer />
       </TopContainer>
       <BottomFull>
         <BottomRight>

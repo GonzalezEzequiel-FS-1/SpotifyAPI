@@ -70,4 +70,5 @@ router.get('/categories', checkActiveToken, loadCategories)
 router.post('/categories', checkActiveToken, singleCategory)
 router.post("/categories/playlists", checkActiveToken, loadPlaylists)
 router.post("/categories/playlists/tracks", checkActiveToken, loadTracks)
+router.post('/search/track')
 module.exports = router;
