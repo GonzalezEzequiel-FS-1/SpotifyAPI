@@ -1,9 +1,20 @@
+
 // Create an instance of Express
 const express = require("express");
 
 //Create an instance eof router
 const router = express.Router()
 
+
+//TestRoute
+router.get('/', (req,res)=>{
+
+    res.status(200).json({
+        success:true,
+        message:"api works"
+    })
+    console.log('Test')
+})
 //Import User CRUD Modules
 const signUp = require('../controllers/UserControllers/signUp');
 const signIn = require('../controllers/UserControllers/signIn');
@@ -32,6 +43,7 @@ const  redirectToSpotifyAuth  = require("../controllers/SpotifyControllers/Redir
 const  callback  = require("../controllers/SpotifyControllers/Callback");
 const checkActiveToken = require("../middlewares/checkActiveToken");
 const searchSpoti = require("../controllers/SpotifyControllers/searchSpoti");
+const search = require("../controllers/SpotifyControllers/search");
 
 
 //User CRUD Routes
@@ -71,4 +83,5 @@ router.post('/categories', checkActiveToken, singleCategory)
 router.post("/categories/playlists", checkActiveToken, loadPlaylists)
 router.post("/categories/playlists/tracks", checkActiveToken, loadTracks)
 router.post('/search/track')
+router.post('/search', checkActiveToken, search)
 module.exports = router;

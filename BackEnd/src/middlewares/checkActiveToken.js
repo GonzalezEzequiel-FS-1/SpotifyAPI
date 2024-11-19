@@ -56,10 +56,11 @@ const checkActiveToken = async (req, res, next) => {
             })
         }
 
-        console.log("Profile retrieved")
+        console.log(`Profile retrieved${JSON.stringify(response.data)}`)
         if (response.status === 200) {
             req.active_token = true;
-            req.user = user; // Attach user to req object
+            req.user = user;
+            req.token = accessToken;
             return next();
         }
 

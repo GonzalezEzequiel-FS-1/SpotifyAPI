@@ -10,7 +10,7 @@ const getUser = async (req, res) =>{
         const response = await getToken(user);
         const userToken = response.data;
         console.log(userToken)
-        return res.status(200).json({ success: true, token: userToken }); // Added response here
+        return res.status(200).json({ success: true, token: userToken }); 
 
     }catch(err){
         res.status(500).json({

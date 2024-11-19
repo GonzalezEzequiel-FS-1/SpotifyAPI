@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import CircularIndeterminate from "../Progress/CircularProgress";
 import PropTypes from "prop-types";
-import colorThief from 'colorthief'
+
 
 
 export default function Categories() {
@@ -198,9 +198,9 @@ const CardContainer = styled.div`
     background-color: #55555590;
     gap: 0.5rem;
     margin-left: 2rem;
- 
-    width: 20rem;
-    height: 80%;
+    overflow:hidden;
+    width: 15rem;
+    height: 98%;
     padding: 1rem;
     
     position:relative;
@@ -218,7 +218,7 @@ const CardContainer = styled.div`
 const Title = styled.p`
     font-family: "Roboto";
     line-height: 85%;
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: 800;
     color: white;
     letter-spacing: .25rem;
@@ -233,8 +233,8 @@ const Title = styled.p`
 `;
 
 const Thumbnail = styled.img`
-    width: 100%;
-    height: auto;
+    width:auto;
+    height: 80%;
     object-fit: cover;
     transition: transform 0.3s, filter 0.3s;
     border-radius: 20px;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Categories from "../Components/cards/Categories";
 import { useEffect, useState } from "react";
 import AudioPLayer from "../Components/AudioPLayer";
+import { SearchCard } from "../Components/cards/SearchCard";
 
 const Home = () => {
   const [count, setCount] = useState(0)
@@ -36,6 +37,7 @@ const Home = () => {
       </TopContainer>
       <BottomFull>
         <BottomRight>
+          <SearchCard />
         </BottomRight>
         <BottomLeft>
           
@@ -106,6 +108,7 @@ const BottomLeft = styled.div`
   height:100%;
   display: flex;
   justify-content:flex-end;
+
 `;
 
 const BottomFull = styled.div`
