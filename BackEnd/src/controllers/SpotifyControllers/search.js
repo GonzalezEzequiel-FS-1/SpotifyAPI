@@ -3,29 +3,45 @@ const getToken = require('../../utils/getToken')
 const User = require('../../models/User')
 
 const search = async (req, res) =>{
-    const query = req.body
+    console.log('STARTING SEARCH VVVVV')
+    const user = req.session.user.user_name
+    const query = req.body.query
     if(!query){
         res.status(400).json({
             success:false,
             message:`Query not provided`
         })
     }
-    const user =  req.session.user
+
     if(!user){
         res.status(400).json({
             success:true,
             message:"User not provided"
         })
     }
-    console.log(user)
+    
     try{
-        const response = await User.findOne({"user_name":"zeke"})
-        const token = response.data.accessToken
-
+        const response = await User.findOne({"user_name":`${user}`})
+        //console.log(`FROM SEARCH ====>>${JSON.stringify(response.data)}`)
+        const token = response.accessToken
+        if(!token){
+            res.status(400).json({
+                success:false,
+                message:'No data retrieved from DB'
+            })
+        }
+        if(token){
+            const search = await axios.get(`https://api.spotify.com/v1/search?q=${query}`, {
+                headers:{
+                    "Authorization" : `Bearer ${accessToken}`
+                }
+            })
+            console.log(search)  
+        }
     }catch(err){
-        res.status(500).josn({
+        res.status(500).json({
             success:false,
-            error:error.message
+            error:err.message
         })
     }
     
