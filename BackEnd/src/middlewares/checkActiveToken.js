@@ -11,7 +11,7 @@ if (!TOKEN_URL || !CLIENT_ID || !CLIENT_SECRET) {
 
 const checkActiveToken = async (req, res, next) => {
     console.log("==>>>>>>>>>>>>> TOKEN REFRESHER STARTED <<<<<<<<<<<<<< <===")
-    const user = req.session.user.user_name;
+    const user = req.session.user.user_name
     console.log(user)
     if (!user) {
         console.log("Checking user")
@@ -21,7 +21,7 @@ const checkActiveToken = async (req, res, next) => {
         })
     }
 
-    console.log("User found, Searching database")
+    console.log(`User found, Searching database ${user}`)
     const userData = await User.findOne({ user_name: user })
     if (!userData) {
         return res.status(404).json({
@@ -29,7 +29,7 @@ const checkActiveToken = async (req, res, next) => {
             message: 'User not found'
         })
     }
-
+    console.log(`USER DATA FROM DB ${userData}`)
     console.log("User retrieved from DB, accessing token")
     const accessToken = userData.accessToken;
     const refresh_token = userData.refreshToken;

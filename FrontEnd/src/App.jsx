@@ -25,7 +25,7 @@ export default function App() {
           <Route path='/signup' element={<SignUp />} />
           <Route path='/*' element={<FourOhFour />} />
           <Route path='/spotify-login' element={<SpotiLoad />} />
-          <Route path='/home/:user' element={
+          <Route path='/home/' element={
               <ProtectedRoute><Home /></ProtectedRoute>
             }/>
           <Route  path='/search'  element={

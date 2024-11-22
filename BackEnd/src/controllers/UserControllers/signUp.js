@@ -10,6 +10,7 @@ const signUp = async (req, res) => {
             message: `No user data provided`
         })
     }
+    console.log(' CORRECT FORMAT FOR USER DATA ');
 
     try {
         const newUser = new User(userData)
@@ -20,6 +21,7 @@ const signUp = async (req, res) => {
                 message: `User ${user.data} not saved to database`
             })
         }
+        console.log(' USER SAVED TO DB ');
         res.status(200).json({
             success:true,
             message:`User created`,

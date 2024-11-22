@@ -59,6 +59,7 @@ router.post('/signup', setSession, signUp);
 router.get('/signout', destroySession);
 router.get("/redirect", (req, res) => {
     const user_name = req.query.user_name;
+    console.log(`FROM INDEX /redirect ${user_name}`)
     if (!user_name) {
         return res.status(400).json({ success: false, message: 'user_name query parameter is required' });
     }
@@ -78,10 +79,10 @@ router.post('/token/check', checkActiveToken)
 
 router.get('/search', searchSpoti)
 
-router.get('/categories', checkActiveToken, loadCategories)
-router.post('/categories', checkActiveToken, singleCategory)
-router.post("/categories/playlists", checkActiveToken, loadPlaylists)
-router.post("/categories/playlists/tracks", checkActiveToken, loadTracks)
+router.get('/categories', loadCategories)
+router.post('/categories', singleCategory)
+router.post("/categories/playlists", loadPlaylists)
+router.post("/categories/playlists/tracks", loadTracks)
 router.post('/search/track')
-router.post('/search', checkActiveToken, search)
+router.post('/search', search)
 module.exports = router;
