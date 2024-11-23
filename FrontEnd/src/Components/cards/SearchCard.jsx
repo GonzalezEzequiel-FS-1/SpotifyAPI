@@ -5,13 +5,20 @@ import TextField from '../Fields/TextField'
 
 
 export const SearchCard = () => {
+  const [query, setQuery] = useState('')
   const [results, setResults] = useState([],)
+  const [type, setType] = useState("track")
   const handleSearch = async (e) => {
     e.preventDefault()
-    console.log(results)
+  
     try {
       const response = await axios.post('http://localhost:3069/api/search/',
-        {query:results}, { withCredentials: true }
+        {
+          query,
+          type
+        }, {
+        withCredentials: true
+      }
       )
       console.log(response.data.data.items)
       const searchResults = response.data.data;
@@ -22,16 +29,26 @@ export const SearchCard = () => {
     }
 
   }
+  const handleSearchType = async (e) => {
+    setType(e.target.value)
+  }
   return (
     <Container>
       <Text>Hello, World</Text>
       <Form onSubmit={handleSearch}>
         <TextField
-          type={"text"}
-          value={results}
-          onChange={(e) => setResults(e.target.value)}
-          placeholder={"Search"}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search"
         />
+        <select value={type} onChange={handleSearchType}>
+
+          <option value={"track"}>Song</option>
+          <option value={"album"}>Album</option>
+          <option value={"playlist"}>Playlist</option>
+          <option value={"artist"}>Artist</option>
+        </select>
 
         <button type="submit">CLICK ME!!!</button>
 
@@ -55,6 +72,5 @@ const Text = styled.p`
 
 const Form = styled.form`
   width:100%;
-  height: 100%;
   background-color: red;
 `

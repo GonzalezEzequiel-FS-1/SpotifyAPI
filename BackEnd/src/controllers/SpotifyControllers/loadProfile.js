@@ -3,9 +3,9 @@ const axios = require('axios');
 const getToken = require('../../utils/getToken');
 
 const loadProfile = async (req, res) => {
-    console.log(req.session)
+    //console.log(req.session)
     const  user  = req.session.user;
-    console.log(user)
+    //console.log(user)
 
     const tokenResult = await getToken(user);
 
@@ -22,12 +22,13 @@ const loadProfile = async (req, res) => {
             }
         });
 
-        console.log(userProfile.data);
+        //console.log(userProfile.data);
         return res.status(200).json({
             success: true,
             profile: userProfile.data
         });
     } catch (error) {
+        console.error(error.message)
         return res.status(500).json({
             success: false,
             message: 'Error loading profile'

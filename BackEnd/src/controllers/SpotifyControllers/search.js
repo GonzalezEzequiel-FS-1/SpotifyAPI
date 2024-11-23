@@ -1,60 +1,69 @@
 const axios = require('axios');
-const getToken = require('../../utils/getToken')
-const User = require('../../models/User')
+const getToken = require('../../utils/getToken');
+const User = require('../../models/User');
 
-const search = async (req, res) =>{
-    console.log('STARTING SEARCH VVVVV')
-    const user = req.session.user.user_name
-    const query = req.body.query
-    if(!query){
-        res.status(400).json({
-            success:false,
-            message:`Query not provided`
-        })
-        console.log(' Query didnt make it ')
+const search = async (req, res) => {
+    console.log('STARTING SEARCH');
+
+    const user = req.session.user?.user_name;
+    const query = req.body.query;
+
+    // Validate query
+    if (!query) {
+        console.log("Query not provided");
+        return res.status(400).json({
+            success: false,
+            message: "Query not provided",
+        });
     }
-console.log(' Query check pass checking user ')
-    if(!user){
-        res.status(400).json({
-            success:true,
-            message:"User not provided"
-        })
-        console.log(' user didnt make it ')
+
+    // Validate user
+    if (!user) {
+        console.log("User not provided");
+        return res.status(400).json({
+            success: false,
+            message: "User not provided",
+        });
     }
-    console.log(' user check passed ')
-    try{
-        console.log(' Checking DB ')
-        const response = await User.findOne({"user_name":`${user}`})
-        //console.log(`FROM SEARCH ====>>${JSON.stringify(response.data)}`)
-  
-        const token = response.accessToken
-        if(!token){
-            res.status(400).json({
-                success:false,
-                message:'No data retrieved from DB'
-            })
-            console.log(' no token from DB ')
+    const formattedQuery = query.replace(/\s+/g, '+');
+    console.log(formattedQuery)
+    console.log('Query and user validated');
+
+    try {
+        console.log('Fetching token...');
+        const accessToken = await getToken(user);
+        console.log(`Access token retrieved: ${JSON.stringify(accessToken)}`);
+
+        const token = accessToken?.accessToken;
+        if (!token) {
+            console.log("No token retrieved from DB");
+            return res.status(400).json({
+                success: false,
+                message: "No token retrieved from DB",
+            });
         }
-        if(token){
-            console.log(' got token searching spotify ')
-            const search = await axios.get(`https://api.spotify.com/v1/search?q=${query}`, {
-                headers:{
-                    "Authorization" : `Bearer ${accessToken}`
-                }
-            })
-            console.log(search)  
-        }
-    }catch(err){
-        console.log(`Error 500>>>> m${err.message}`)
-        res.status(500).json({
-            success:false,
-            error:err.message
-        })
+
+        console.log("Searching Spotify...");
+        const response = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(formattedQuery)}&type=artist`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+
+        console.log("Spotify response received", JSON.stringify(response.data));
+
+        return res.status(200).json({
+            success: true,
+            data: response.data,
+        });
+
+    } catch (err) {
+        console.error("Error:", err.message);
+        return res.status(500).json({
+            success: false,
+            error: err.message,
+        });
     }
-    
+};
 
-   
-
-}
-
-module.exports = search; 
+module.exports = search;
