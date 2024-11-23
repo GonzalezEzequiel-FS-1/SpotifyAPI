@@ -2,7 +2,7 @@ const User = require("../../models/User")
 const signIn = async (req, res) => {
     const user_name  = req.body.user_name;
     const password = req.body.password;
-    console.log(`SESSION DATA >>>>>>>${JSON.stringify(req.session)}<<<<<<<<`)
+    //console.log(`SESSION DATA >>>>>>>${JSON.stringify(req.session)}<<<<<<<<`)
 
     try {
         const loggingUser = await User.findOne({ user_name });

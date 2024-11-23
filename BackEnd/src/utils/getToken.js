@@ -10,13 +10,13 @@ if (!TOKEN_URL || !CLIENT_ID || !CLIENT_SECRET) {
 }
 
 const getToken = async (user) => {
-    console.log(user)
+    //console.log(user)
     const userName = user.user_name
-    console.log(`Formatted ${JSON.stringify(user)} to ${userName}`)
-    console.log('==> Entered getToken function with user:', userName);
+    //console.log(`Formatted ${JSON.stringify(user)} to ${userName}`)
+    //console.log('==> Entered getToken function with user:', userName);
 
     if (!userName) {
-        console.log('No user provided in session');
+        //console.log('No user provided in session');
         return {
             success: false,
             message: 'No user provided in session'
@@ -24,12 +24,12 @@ const getToken = async (user) => {
     }
 
     try {
-        console.log(`==> Searching for user in database: ${userName}`);
+        //console.log(`==> Searching for user in database: ${userName}`);
         const userData = await User.findOne({ user_name: userName });
-        console.log('Database Query Result:', userData);
+        //console.log('Database Query Result:', userData);
 
         if (!userData) {
-            console.log('User not found in database');
+            //console.log('User not found in database');
             return {
                 success: false,
                 message: 'User not found'
@@ -37,24 +37,24 @@ const getToken = async (user) => {
         }
 
         const accessToken = userData.accessToken;
-        console.log('User Access Token:', accessToken);
+        //console.log('User Access Token:', accessToken);
 
         if (!accessToken) {
-            console.log('No access token found for user');
+            console.eror('No access token found for user');
             return {
                 success: false,
                 message: 'No access token found for the user'
             };
         }
 
-        console.log('Access token successfully retrieved');
+        //console.log('Access token successfully retrieved');
         return {
             success: true,
             accessToken: accessToken
         };
 
     } catch (error) {
-        console.log('==> Entering Error checks')
+        console.error('==> Entering Error checks')
         if(error.response === 401 ){
             console.log('EXPIRED TOKEN')
             const response = await axios.post(TOKEN_URL, new URLSearchParams({
@@ -68,7 +68,7 @@ const getToken = async (user) => {
                 }
             });
 
-            console.log("Token refresh response received:", response.data);
+            //console.log("Token refresh response received:", response.data);
 
             const newToken = response.data.access_token;
             if (!newToken) {
@@ -77,7 +77,7 @@ const getToken = async (user) => {
                     message: "refresh token not obtained"
                 })
             }
-            console.log(`TOKEN REFRESHER: GOT'EM!!!: ${newToken}`);
+            //console.log(`TOKEN REFRESHER: GOT'EM!!!: ${newToken}`);
                 const updatedUserData = await User.findOneAndUpdate(
                     { user_name: user },
                     { accessToken: newToken }
@@ -91,7 +91,7 @@ const getToken = async (user) => {
                 }
         }
         
-        //console.error('Error fetching user token:', error.message);
+        console.error('Error fetching user token:', error.message);
         return {
             success: false,
             message: 'Internal server error during token retrieval',

@@ -79,7 +79,7 @@ router.post('/token/check', checkActiveToken)
 
 router.get('/search', searchSpoti)
 
-router.get('/categories', loadCategories)
+router.get('/categories',checkActiveToken, loadCategories)
 router.post('/categories', singleCategory)
 router.post("/categories/playlists", loadPlaylists)
 router.post("/categories/playlists/tracks", loadTracks)

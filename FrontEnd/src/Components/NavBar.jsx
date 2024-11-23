@@ -12,7 +12,7 @@ export default function NavBar (){
         try {
             const response = await axios.get('http://localhost:3069/api/profile',{},{withCredentials:true})
         const userData = response.data
-        console.log(userData)
+        console.log(`DATA FROM NAVBAR >>>>>>> ${userData}<<<<<<<<<<<`)
         } catch (error) {
             console.log(error.message)
         }

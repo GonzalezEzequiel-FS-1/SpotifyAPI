@@ -10,18 +10,19 @@ if (!TOKEN_URL || !CLIENT_ID || !CLIENT_SECRET) {
 }
 
 const checkActiveToken = async (req, res, next) => {
-    console.log("==>>>>>>>>>>>>> TOKEN REFRESHER STARTED <<<<<<<<<<<<<< <===")
-    const user = req.session.user
-    console.log(user)
+    //console.log("==>>>>>>>>>>>>> TOKEN REFRESHER STARTED <<<<<<<<<<<<<< <===")
+    const sessionUser = req.session.user
+    const user = sessionUser.user_name
+    //console.log(user)
     if (!user) {
-        console.log("Checking user")
+        //console.log("Checking user")
         return res.status(400).json({
             success: false,
             message: 'No user in session'
         })
     }
 
-    console.log(`User found, Searching database ${user}`)
+    //console.log(`User found, Searching database ${user}`)
     const userData = await User.findOne({ user_name: user })
     if (!userData) {
         return res.status(404).json({
@@ -29,8 +30,8 @@ const checkActiveToken = async (req, res, next) => {
             message: 'User not found'
         })
     }
-    console.log(`USER DATA FROM DB ${userData}`)
-    console.log("User retrieved from DB, accessing token")
+    //console.log(`USER DATA FROM DB ${userData}`)
+    //console.log("User retrieved from DB, accessing token")
     const accessToken = userData.accessToken;
     const refresh_token = userData.refreshToken;
 
@@ -41,7 +42,7 @@ const checkActiveToken = async (req, res, next) => {
         });
     }
 
-    console.log("Token retrieved, getting spotify")
+    //console.log("Token retrieved, getting spotify")
     try {
         const response = await axios.get('https://api.spotify.com/v1/me', {
             headers: {
@@ -56,7 +57,7 @@ const checkActiveToken = async (req, res, next) => {
             })
         }
 
-        console.log(`Profile retrieved${JSON.stringify(response.data)}`)
+        //console.log(`Profile retrieved${JSON.stringify(response.data)}`)
         if (response.status === 200) {
             req.active_token = true;
             req.user = user;
@@ -66,7 +67,7 @@ const checkActiveToken = async (req, res, next) => {
 
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            console.log(`Token Expired Check failed`)
+            console.error(`Token Expired Check failed`)
 
             try {
                 const response = await axios.post(TOKEN_URL, new URLSearchParams({
@@ -80,7 +81,7 @@ const checkActiveToken = async (req, res, next) => {
                     }
                 });
 
-                console.log("Token refresh response received:", response.data);
+                //console.log("Token refresh response received:", response.data);
 
                 const newToken = response.data.access_token;
 
@@ -91,7 +92,7 @@ const checkActiveToken = async (req, res, next) => {
                     })
                 }
 
-                console.log(`TOKEN REFRESHER: GOT'EM!!!: ${newToken}`);
+                //console.log(`TOKEN REFRESHER: GOT'EM!!!: ${newToken}`);
                 const updatedUserData = await User.findOneAndUpdate(
                     { user_name: user },
                     { accessToken: newToken }
@@ -104,7 +105,7 @@ const checkActiveToken = async (req, res, next) => {
                     })
                 }
 
-                console.log(`Access Token for user: ${user} updated to ${newToken}, New Data : ${updatedUserData}`);
+                //console.log(`Access Token for user: ${user} updated to ${newToken}, New Data : ${updatedUserData}`);
                 req.active_token = true;
                 req.user = user;
                 req.newToken = newToken;

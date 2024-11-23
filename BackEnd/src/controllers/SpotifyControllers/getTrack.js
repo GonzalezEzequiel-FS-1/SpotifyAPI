@@ -20,7 +20,7 @@ const getTrack = async (req, res) => {
         const requestTrack = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
             "Authorization": `Bearer ${userToken}`
         })
-        console.log(requestTrack.data)
+        //console.log(requestTrack.data)
     } catch (err) {
         res.status(500).json({
             success: false,
