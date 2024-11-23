@@ -3,8 +3,22 @@ import { Link, useNavigate } from "react-router-dom";
 import pic from "../assets/pic.png"
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import {useEffect, useState} from "react"
 
 export default function NavBar (){
+    const [image, setImage] =useState(null)
+
+    const handleImageLoad = async () =>{
+        try {
+            const response = await axios.get('http://localhost:3069/api/profile',{},{withCredentials:true})
+        const userData = response.data
+        console.log(userData)
+        } catch (error) {
+            console.log(error.message)
+        }
+        
+    }
+    
     const navigate=useNavigate();
     const { logout } = useAuth();
     const handleLogout = async (e) => {
@@ -27,11 +41,11 @@ export default function NavBar (){
         <Container>
             <TopContainers><Avatar to={"/profile"}></Avatar></TopContainers>
             <TopContainers>
-                <LinkText to={"/home/zeke"}>Home</LinkText>
+                <LinkText to={"/home"}>Home</LinkText>
                 <LinkText to={"/search"}>Search</LinkText>
-                <LinkText to={"/home/zeke"}>Library</LinkText>
+                <LinkText to={"/home"}>Library</LinkText>
             </TopContainers>
-            <TopContainers></TopContainers>
+            <TopContainers onClick={handleImageLoad}></TopContainers>
             <TopContainers><LinkText to={"/home"} onClick={handleLogout}>Log Out</LinkText></TopContainers>
         </Container>
     )

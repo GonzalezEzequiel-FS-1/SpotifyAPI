@@ -54,7 +54,7 @@ router.patch('/user/:name', sessionTester, modifyUser);
 
 
 //SignUp, SignIn and Out
-router.post('/signin', checkActiveToken, signIn);
+router.post('/signin', signIn);
 router.post('/signup', setSession, signUp);
 router.get('/signout', destroySession);
 router.get("/redirect", (req, res) => {
@@ -72,7 +72,7 @@ router.get("/callback", callback);
 router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
 
-router.get('/profile', checkActiveToken, loadProfile)
+router.get('/profile', loadProfile)
 
 
 router.post('/token/check', checkActiveToken)

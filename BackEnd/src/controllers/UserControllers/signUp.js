@@ -21,6 +21,8 @@ const signUp = async (req, res) => {
                 message: `User ${user.data} not saved to database`
             })
         }
+        req.session.user=user_name;
+        console.log(req.session)
         console.log(' USER SAVED TO DB ');
         res.status(200).json({
             success:true,

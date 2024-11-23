@@ -3,7 +3,7 @@ const axios = require('axios');
 const getToken = require('../../utils/getToken');
 
 const loadProfile = async (req, res) => {
-    
+    console.log(req.session)
     const  user  = req.session.user;
     console.log(user)
 
