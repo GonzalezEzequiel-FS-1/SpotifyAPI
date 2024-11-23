@@ -8,6 +8,7 @@ export const SearchCard = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([],)
   const [type, setType] = useState("track")
+  
   const handleSearch = async (e) => {
     e.preventDefault()
   
@@ -20,8 +21,9 @@ export const SearchCard = () => {
         withCredentials: true
       }
       )
-      console.log(response.data.data.items)
-      const searchResults = response.data.data;
+      
+      const searchResults = response.data.data.tracks.items
+      console.log(searchResults)
       setResults(searchResults)
 
     } catch (err) {
@@ -32,6 +34,7 @@ export const SearchCard = () => {
   const handleSearchType = async (e) => {
     setType(e.target.value)
   }
+  
   return (
     <Container>
       <Text>Hello, World</Text>
@@ -53,6 +56,14 @@ export const SearchCard = () => {
         <button type="submit">CLICK ME!!!</button>
 
       </Form>
+      {results.map((result)=>(
+        <div key={result.id}>
+          <p>{result.name}</p>
+          <img src={result.album.images[0].url}></img>
+          <p>{result.artists[0].name}</p>
+          <button onClick={()=>{console.log(result.id)}}>PLAY</button>
+        </div>
+      ))}
 
     </Container>
   )

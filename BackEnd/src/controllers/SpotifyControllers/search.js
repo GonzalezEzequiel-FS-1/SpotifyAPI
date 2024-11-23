@@ -7,6 +7,7 @@ const search = async (req, res) => {
 
     const user = req.session.user?.user_name;
     const query = req.body.query;
+    const type = req.body.type
 
     // Validate query
     if (!query) {
@@ -44,14 +45,15 @@ const search = async (req, res) => {
         }
 
         console.log("Searching Spotify...");
-        const response = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(formattedQuery)}&type=artist`, {
+        console.log(`Formatted Query = ${formattedQuery}, Search Type = ${type}`)
+        const response = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(formattedQuery)}&type=${type}`, {
             headers: {
                 "Authorization": `Bearer ${token}`,
             },
         });
 
-        console.log("Spotify response received", JSON.stringify(response.data));
-
+        //console.log("Spotify response received", JSON.stringify(response.data));
+        console.log('Response obtained from spotify')
         return res.status(200).json({
             success: true,
             data: response.data,
