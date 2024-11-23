@@ -54,7 +54,7 @@ router.patch('/user/:name', sessionTester, modifyUser);
 
 
 //SignUp, SignIn and Out
-router.post('/signin', signIn);
+router.post('/signin', checkActiveToken, signIn);
 router.post('/signup', setSession, signUp);
 router.get('/signout', destroySession);
 router.get("/redirect", (req, res) => {
