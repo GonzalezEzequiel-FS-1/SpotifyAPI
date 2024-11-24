@@ -14,7 +14,7 @@ export default function Categories() {
     const [loading, setLoading] = useState(false);
     const [displayedData, setDisplayedData] = useState("category");
     const [currentItem, setCurrentItem] = useState({});
-    const [bgColor, setBGColor] = useState("#5555550")
+    //const [bgColor, setBGColor] = useState("#5555550")
 
     const handleCategories = async () => {
         setLoading(true);

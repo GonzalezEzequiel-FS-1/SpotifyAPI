@@ -6,6 +6,7 @@ export default function Search() {
         e.preventDefault()
         console.log(search)
     }
+
     return (
         <Container onSubmit={handleSearch}>
             <SearchContainer>

@@ -44,6 +44,7 @@ const  callback  = require("../controllers/SpotifyControllers/Callback");
 const checkActiveToken = require("../middlewares/checkActiveToken");
 const searchSpoti = require("../controllers/SpotifyControllers/searchSpoti");
 const search = require("../controllers/SpotifyControllers/search");
+const getTokenRoute = require("../controllers/UserControllers/tokenGetter");
 
 
 //User CRUD Routes
@@ -76,7 +77,7 @@ router.get('/profile', loadProfile)
 
 
 router.post('/token/check', checkActiveToken)
-
+router.post('/token', getTokenRoute)
 router.get('/search', searchSpoti)
 
 router.get('/categories',checkActiveToken, loadCategories)

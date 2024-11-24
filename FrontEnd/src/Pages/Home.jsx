@@ -2,8 +2,9 @@ import styled from "styled-components";
 //import SubmitBtn from "../Components/Buttons/SubmitBtn";
 import Categories from "../Components/cards/Categories";
 import { useEffect, useState } from "react";
-import AudioPLayer from "../Components/AudioPLayer";
 import { SearchCard } from "../Components/cards/SearchCard";
+import PlayerControls from "../Components/Player/playerControls";
+import Player from "../Components/Player"
 
 const Home = () => {
   const [count, setCount] = useState(0)
@@ -16,7 +17,7 @@ const Home = () => {
       setCount(0)
     }
   }
-
+ 
   const handleBack = (e) => {
     e.preventDefault()
     setCount(count - 1)
@@ -33,8 +34,10 @@ const Home = () => {
   return (
     <Container>
       <TopContainer>
-      <AudioPLayer />
+      <PlayerControls />
+      <Player />
       </TopContainer>
+      
       <BottomFull>
         <BottomRight>
           <SearchCard />
@@ -86,12 +89,21 @@ const Container = styled.div`
 `;
 
 const TopContainer = styled.div`
-  height: 40%;
+  height: 60%;
+  width:100%;
+  background-color:white;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const BottomRight = styled.div`
-  width: 40vw;
+  width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  
   
 `;
 const Mask = styled.div`
@@ -104,20 +116,17 @@ const Mask = styled.div`
 `
 
 const BottomLeft = styled.div`
-  width: 60vw;
+  width: 60%;
   height:100%;
   display: flex;
-  justify-content:flex-end;
-
 `;
 
 const BottomFull = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   width: 100%;
   height: 40%;
   position: absolute;
   bottom: 0;
-
 `;
