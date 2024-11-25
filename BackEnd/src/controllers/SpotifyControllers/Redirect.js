@@ -11,25 +11,26 @@ if (!CLIENT_ID || !REDIRECT_URI) {
 const redirectToSpotifyAuth = async (req, res) => {
     const dialog = true;
     const user_name = req.query.user_name; // Get user_name from query parameters
+    console.log(`STATE FROM CALLBACK====> ${user_name}`)
 
     // Define multiple scopes here
     const scopes = [
-        "user-read-private",
-        "user-read-email",
-        "playlist-read-private",
-        "user-library-read",
-        "playlist-modify-public",
-        "user-read-recently-played",
-        "user-library-modify",
-        "user-library-read"
+        "user-read-private"
+        
     ].join(" "); // Join scopes with spaces
 
     const encodedScopes = encodeURIComponent(scopes);
     const redirect_uri = encodeURIComponent(REDIRECT_URI);
 
-    const authURL = `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirect_uri}&scope=${encodedScopes}&show_dialog=${dialog}&state=${user_name}`;
+    const authURL = `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirect_uri}&scope=user-read-private&show_dialog=${dialog}&state=${user_name}`;
 
     res.json({ redirectURL: authURL });
 };
 
+// const redirectToSpotifyAuth = async (req, res) => {
+//     const dialog = true;
+//     const redirect_uri = encodeURIComponent(process.env.REDIRECT_URI);
+//     const authURL = `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${redirect_uri}&scope=user-read-private&show_dialog=${dialog}`;
+//     res.redirect(authURL);
+// };
 module.exports = redirectToSpotifyAuth;

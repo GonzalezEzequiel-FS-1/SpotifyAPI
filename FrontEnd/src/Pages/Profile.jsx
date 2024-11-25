@@ -32,7 +32,7 @@ export default function Profile() {
             setFollowers(profile.followers?.total || 0);
             setImages(profile.images || [])
 
-            console.log("Profile Data:", data);
+            //console.log("Profile Data:", data);
         } catch (error) {
             console.error('Error fetching profile:', error.message);
         } finally {

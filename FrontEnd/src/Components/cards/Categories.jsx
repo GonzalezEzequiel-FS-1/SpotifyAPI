@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import CircularIndeterminate from "../Progress/CircularProgress";
 import PropTypes from "prop-types";
-import colorThief from 'colorthief'
+import usePlayer from "../../context/usePlayer";
 
 
-export default function Categories() {
+
+export default function Categories({song}) {
+    const { playSong } = usePlayer()
     const [categories, setCategories] = useState([]);
     const [playlists, setPlaylists] = useState([]);
     const [tracks, setTracks] = useState([]);
@@ -14,7 +16,7 @@ export default function Categories() {
     const [loading, setLoading] = useState(false);
     const [displayedData, setDisplayedData] = useState("category");
     const [currentItem, setCurrentItem] = useState({});
-    const [bgColor, setBGColor] = useState("#5555550")
+    //const [bgColor, setBGColor] = useState("#5555550")
 
     const handleCategories = async () => {
         setLoading(true);
@@ -60,8 +62,9 @@ export default function Categories() {
             console.error(error.message);
         }
     };
-    const handleImageClick = async (trackId) =>{
-        console.log(`Image Clicked ID: ${trackId}`)
+    const handleSongPlayer = async (song) =>{
+        console.log(`Image Clicked: ${song}`)
+        playSong(song)
     }
     //Testing Purposes only
     const handleSearchTrack = async (trackId) => {
@@ -124,7 +127,11 @@ export default function Categories() {
 
                     return (
                         <CardContainer key={track.id}>
-                            {albumImage && <Thumbnail src={albumImage} alt={track.name}  onClick={() =>  handleSearchTrack(track.id) } />}
+                        <ImageCont>
+                        
+                            {albumImage && <Thumbnail src={albumImage} alt={track.name}  />}
+                            <PlayMe  onClick={() =>  handleSongPlayer(track) }>PLAY</PlayMe>
+                            </ImageCont>
                             <Title>{track.name}</Title>
                             <ArtistName>
                                 {track.artists.map((artist) => artist.name).join(", ")}
@@ -188,6 +195,55 @@ const MainContainer = styled.div`
     padding: 1rem;
     width: 100%;
     height:100%;
+    filter: grayscale(0);
+`;
+const ImageCont = styled.div`
+    display:flex;
+    align-items:center;
+    justify-content: center;
+
+`
+
+
+const PlayMe = styled.p`
+    font-family: "Catamaran";
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0.25rem;
+    filter: blur(10px); /* Initially blurred */
+    position: absolute;
+    color: #00000000; /* Initially transparent */
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+    border-radius: 20px;
+    border: 2px solid #f5f5f550;
+    padding: 1rem;
+    text-align: center;
+    
+    /* Hover effect to change background color */
+    &:hover {
+        background-color: #00000070;
+    }
+    
+    /* Active effect to scale the text when clicked */
+    &:active {
+        transform: scale(0.8);
+    }
+`;
+
+const Thumbnail = styled.img`
+    width: auto;
+    height: 80%;
+    object-fit: cover;
+    transition: transform 0.3s, filter 0.3s;
+    border-radius: 20px;
+    box-shadow: 5px 5px 15px black;
+    cursor: pointer;
+    
+    &:hover {
+        filter: brightness(0.8) blur(2px); /* Apply blur and brightness change on hover */
+        transform: scale(1.05);
+    }
 `;
 
 const CardContainer = styled.div`
@@ -198,27 +254,34 @@ const CardContainer = styled.div`
     background-color: #55555590;
     gap: 0.5rem;
     margin-left: 2rem;
- 
-    width: 20rem;
-    height: 80%;
+    overflow: hidden;
+    width: 15rem;
+    height: 98%;
     padding: 1rem;
-    
-    position:relative;
+    position: relative;
     border-radius: 20px;
     box-shadow: 5px 5px 20px black;
-    transition: all .25s ease-in-out;
-    border:3px solid #555555;
+    transition: all 0.25s ease-in-out;
+    border: 3px solid #555555;
+    
+    /* On hover of the container */
     &:hover {
         transform: scale(1.1);
-        top: .15rem;
         border: 0px solid #00000000;
     }
+    
+    /* Hover effect on the CardContainer to make PlayMe visible */
+    &:hover ${PlayMe} {
+        color: #f5f5f5; /* Make the text visible */
+        filter: blur(0); /* Unblur text */
+    }
 `;
+
 
 const Title = styled.p`
     font-family: "Roboto";
     line-height: 85%;
-    font-size: 2rem;
+    font-size: 1rem;
     font-weight: 800;
     color: white;
     letter-spacing: .25rem;
@@ -232,20 +295,7 @@ const Title = styled.p`
     }
 `;
 
-const Thumbnail = styled.img`
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    transition: transform 0.3s, filter 0.3s;
-    border-radius: 20px;
-    box-shadow: 5px 5px 15px black;
-    cursor: pointer;
-    &:hover {
-        filter: brightness(0.8)
-        blur(2px);
-        transform: scale(1.05);
-    }
-`;
+
 
 const ErrorMessage = styled.p`
     color: red;

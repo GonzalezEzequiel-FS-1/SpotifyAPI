@@ -27,7 +27,7 @@ export default function Signin() {
             });
             if (response.status === 200) {
                 login();
-                navigate(`/home/${userName}`);
+                navigate(`/home`);
             }
         } catch (error) {
             console.error(`DOES NOT WORK: ${error}`);

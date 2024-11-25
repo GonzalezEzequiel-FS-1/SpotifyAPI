@@ -16,8 +16,8 @@ const setSession = (req, res, next) => {
                     message: error.message
                 });
             }
-            console.log(req.session)
-            next(); // Only call next() after session is saved
+            //console.log(req.session)
+            next(); 
         });
     } catch (error) {
         res.status(500).json({

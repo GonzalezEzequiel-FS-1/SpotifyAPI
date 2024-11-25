@@ -1,9 +1,20 @@
+
 // Create an instance of Express
 const express = require("express");
 
 //Create an instance eof router
 const router = express.Router()
 
+
+//TestRoute
+router.get('/', (req,res)=>{
+
+    res.status(200).json({
+        success:true,
+        message:"api works"
+    })
+    console.log('Test')
+})
 //Import User CRUD Modules
 const signUp = require('../controllers/UserControllers/signUp');
 const signIn = require('../controllers/UserControllers/signIn');
@@ -32,6 +43,8 @@ const  redirectToSpotifyAuth  = require("../controllers/SpotifyControllers/Redir
 const  callback  = require("../controllers/SpotifyControllers/Callback");
 const checkActiveToken = require("../middlewares/checkActiveToken");
 const searchSpoti = require("../controllers/SpotifyControllers/searchSpoti");
+const search = require("../controllers/SpotifyControllers/search");
+const getTokenRoute = require("../controllers/UserControllers/tokenGetter");
 
 
 //User CRUD Routes
@@ -47,6 +60,7 @@ router.post('/signup', setSession, signUp);
 router.get('/signout', destroySession);
 router.get("/redirect", (req, res) => {
     const user_name = req.query.user_name;
+    console.log(`FROM INDEX /redirect ${user_name}`)
     if (!user_name) {
         return res.status(400).json({ success: false, message: 'user_name query parameter is required' });
     }
@@ -59,16 +73,17 @@ router.get("/callback", callback);
 router.get("/session", sessionTesting)
 router.post('/session/destroy', destroySession);
 
-router.get('/profile', checkActiveToken, loadProfile)
+router.get('/profile', loadProfile)
 
 
 router.post('/token/check', checkActiveToken)
-
+router.post('/token', getTokenRoute)
 router.get('/search', searchSpoti)
 
-router.get('/categories', checkActiveToken, loadCategories)
-router.post('/categories', checkActiveToken, singleCategory)
-router.post("/categories/playlists", checkActiveToken, loadPlaylists)
-router.post("/categories/playlists/tracks", checkActiveToken, loadTracks)
+router.get('/categories',checkActiveToken, loadCategories)
+router.post('/categories', singleCategory)
+router.post("/categories/playlists", loadPlaylists)
+router.post("/categories/playlists/tracks", loadTracks)
 router.post('/search/track')
+router.post('/search', search)
 module.exports = router;

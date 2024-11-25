@@ -246,7 +246,7 @@ const modifyUser = async (req, res) => {
     const { user_name } = req.params; 
     const { first_name, last_name, email, password, birthday } = req.body;
 
-    console.log('Request Body:', req.body); // Log the request body to check if it contains the correct fields
+    console.log('Request Body:', req.body);
 
     const updatedData = {};
 
