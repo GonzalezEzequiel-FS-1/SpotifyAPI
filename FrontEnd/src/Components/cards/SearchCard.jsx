@@ -18,11 +18,11 @@ export const SearchCard = ({song}) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setError(null); // Reset error
+    setError(null);
     const trimmedQuery = query.trim();
 
     if (!trimmedQuery) {
-      return;  // Optionally handle empty query case
+      return; 
     }
 
     setLoading(true);
@@ -94,9 +94,11 @@ export const SearchCard = ({song}) => {
 const Container = styled.div`
   overflow: hidden;
   height: 100%;
-  width: 80%;
+  width: 90%;
   mask-image: linear-gradient(0deg, #00000000 0%, #000000 80%);
   -webkit-mask-image: linear-gradient(0deg, #00000000 0%, #000000 80%);
+
+
 `;
 
 const Form = styled.form`

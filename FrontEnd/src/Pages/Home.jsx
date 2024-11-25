@@ -4,7 +4,7 @@ import Categories from "../Components/cards/Categories";
 import { useEffect, useState } from "react";
 import { SearchCard } from "../Components/cards/SearchCard";
 import PlayerControls from "../Components/Player/playerControls";
-import Player from "../Components/Player"
+
 
 const Home = () => {
   const [count, setCount] = useState(0)
@@ -35,7 +35,6 @@ const Home = () => {
     <Container>
       <TopContainer>
       <PlayerControls />
-      <Player />
       </TopContainer>
       
       <BottomFull>
@@ -91,7 +90,6 @@ const Container = styled.div`
 const TopContainer = styled.div`
   height: 60%;
   width:100%;
-  background-color:white;
   display:flex;
   flex-direction: column;
   align-items: center;
@@ -102,6 +100,8 @@ const BottomRight = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  padding:0 4rem;
+
   justify-content: center;
   
   
@@ -124,7 +124,7 @@ const BottomLeft = styled.div`
 const BottomFull = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   height: 40%;
   position: absolute;

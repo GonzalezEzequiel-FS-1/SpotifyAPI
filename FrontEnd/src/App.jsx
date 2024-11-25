@@ -35,7 +35,7 @@ export default function App() {
               <ProtectedRoute><Profile /></ProtectedRoute>
             }/>
         </Routes>
-        {isAuthenticated && <Player />}
+        {isAuthenticated}
       </MainContainer>
     </RouterContainer>
   );

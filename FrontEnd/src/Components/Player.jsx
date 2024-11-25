@@ -6,7 +6,6 @@ const SpotifyPlayer = () => {
     const [accessToken, setAccessToken] = useState(null);
     const { currentSong, isPlaying, playSong, pauseSong } = useContext(PlayerContext); 
 
-    // Fetch access token from the server
     const fetchAccessToken = async () => {
         try {
             const response = await axios.post('http://localhost:3069/api/token', {}, {
@@ -21,12 +20,12 @@ const SpotifyPlayer = () => {
     };
 
     useEffect(() => {
-        // Fetch the access token when the component mounts
+        
         fetchAccessToken();
     }, []);
 
     useEffect(() => {
-        // Only initialize the player when the access token is available
+        
         if (accessToken) {
             window.onSpotifyWebPlaybackSDKReady = () => {
                 const player = new window.Spotify.Player({
@@ -57,7 +56,7 @@ const SpotifyPlayer = () => {
                     console.log("Player is ready with device ID:", device_id);
                 });
 
-                // Playback state changes (track, pause, resume, etc.)
+                
                 player.on("player_state_changed", (state) => {
                     console.log("Playback state changed", state);
                     if (state.paused && isPlaying) {
@@ -68,10 +67,10 @@ const SpotifyPlayer = () => {
                     }
                 });
 
-                // Connect the player
+               
                 player.connect();
 
-                // Handle play and pause based on context
+                
                 if (isPlaying && currentSong) {
                     player.play({
                         uris: [currentSong.uri],
@@ -81,7 +80,7 @@ const SpotifyPlayer = () => {
                 }
             };
 
-            // Load the SDK script
+            
             const script = document.createElement("script");
             script.src = "https://sdk.scdn.co/spotify-player.js";
             script.async = true;
@@ -92,8 +91,7 @@ const SpotifyPlayer = () => {
     return (
         <div>
             <h2>Spotify Web Player</h2>
-            <p>Control your music here...</p>
-            {/* Optionally, display the current song */}
+            <p>Controls</p>
             <div>
                 {currentSong ? (
                     <div>
